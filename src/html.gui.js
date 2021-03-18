@@ -15,9 +15,8 @@ const tabs = `
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
+        Tab 1
         <div id="webgl1">
-            Tab 1
-            <canvas id="canvas1"></canvas>
         </div>
     </div>
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="profile-tab">
@@ -42,15 +41,10 @@ function initHTML(renderer, camera)
     // make renderer element
     const elID = 'webgl1';
     const el = document.getElementById(elID);
+    renderer.userData.elementID = 'myTabContent';
 
     // resize renderer
-    const elDimensions = el.getBoundingClientRect();
-    const w = elDimensions.width;
-    const h = elDimensions.height;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.userData.elementID = elID;
-    renderer.setSize(w, h);
+    resize(el, camera, renderer);
 
     // add renderer element
     el.appendChild(renderer.domElement);
@@ -61,18 +55,31 @@ function initHTML(renderer, camera)
         const target = $(e.target).attr('href');
         if (target === '#tab1')
         {
-            console.log('poupi');
             document.getElementById('tab1').style.display = 'block';
+
+            // resize
+            const el2 = document.getElementById('myTabContent');
+            resize(el2, camera, renderer);
         }
     });
     dt.on('hide.bs.tab', function(e) {
         const target = $(e.target).attr('href');
         if (target === '#tab1')
         {
-            console.log('poupi');
             document.getElementById('tab1').style.display = 'none';
         }
     });
+}
+
+function resize(el, camera, renderer)
+{
+    if (!el) return;
+    const elDimensions = el.getBoundingClientRect();
+    const w = Math.floor(elDimensions.width);
+    const h = Math.floor(elDimensions.height);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
 }
 
 export { initHTML };

@@ -48,6 +48,9 @@ let lights = [];
 let composer;
 let scenePass;
 
+// resize performance
+let resizeTimer = null;
+
 function initRenderer()
 {
     renderer = new WebGLRenderer({
@@ -55,7 +58,7 @@ function initRenderer()
         logarithmicDepthBuffer: true,
     });
     renderer.userData = {
-        elementID: 'webgl1',
+        elementID: 'myTabContent',
         width: WIDTH,
         height: HEIGHT
     };
@@ -66,6 +69,7 @@ function initRenderer()
     renderer.setSize(WIDTH, HEIGHT);
     // renderer.shadowMap.enabled = true;
     // renderer.shadowMap.type = PCFSoftShadowMap;
+
     let resizeCallback =  () => {
         const ud = renderer.userData;
         const e = ud.elementID;
@@ -77,16 +81,22 @@ function initRenderer()
             if (elt)
             {
                 const r = elt.getBoundingClientRect();
-                w = r.width;
-                h = r.height;
+                w = Math.floor(r.width);
+                h = Math.floor(r.height);
             }
         }
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
     };
-    window.addEventListener('resize', resizeCallback, false);
-    window.addEventListener('orientationchange', resizeCallback, false);
+
+    let resizeHook = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(resizeCallback, 200);
+    };
+
+    window.addEventListener('resize', resizeHook, false);
+    window.addEventListener('orientationchange', resizeHook, false);
 }
 
 function initComposer()
