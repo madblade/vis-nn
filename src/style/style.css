@@ -17,7 +17,7 @@ body {
     flex: 1;
 }
 
-#tab1 {
+.tab-pane.active.show {
     height: 100%;
     display: flex;
     position: relative;

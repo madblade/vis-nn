@@ -4,26 +4,41 @@ import $ from 'jquery';
 const tabs = `
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="home" aria-selected="true">Home</a>
+        <a class="nav-link active" id="arch-tab" data-toggle="tab" href="#tab1" role="tab"
+        aria-controls="home" aria-selected="true">
+            Architecture
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+        <a class="nav-link" id="train-tab" data-toggle="tab" href="#tab2" role="tab">
+            Training
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+        <a class="nav-link" id="app-tab" data-toggle="tab" href="#tab3" role="tab">
+            Application
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="model-tab" data-toggle="tab" href="#tab4" role="tab">
+            Model View
+        </a>
     </li>
 </ul>
 <div class="tab-content" id="myTabContent">
-    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="home-tab">
-        Tab 1
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+        Architecture
+    </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel">
+        Training
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel">
+        Application
+    </div>
+    <div class="tab-pane fade" id="tab4" role="tabpanel">
+        Model View
         <div id="webgl1">
         </div>
-    </div>
-    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="profile-tab">
-        Tab 2
-    </div>
-    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="contact-tab">
-        Tab 3
     </div>
 </div>
 `;
@@ -53,9 +68,9 @@ function initHTML(renderer, camera)
     const dt = $('a[data-toggle="tab"]');
     dt.on('shown.bs.tab', function(e) {
         const target = $(e.target).attr('href');
-        if (target === '#tab1')
+        if (target === '#tab4')
         {
-            document.getElementById('tab1').style.display = 'block';
+            document.getElementById('tab4').style.display = 'block';
 
             // resize
             const el2 = document.getElementById('myTabContent');
@@ -64,9 +79,9 @@ function initHTML(renderer, camera)
     });
     dt.on('hide.bs.tab', function(e) {
         const target = $(e.target).attr('href');
-        if (target === '#tab1')
+        if (target === '#tab4')
         {
-            document.getElementById('tab1').style.display = 'none';
+            document.getElementById('tab4').style.display = 'none';
         }
     });
 }
