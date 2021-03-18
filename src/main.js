@@ -2,6 +2,9 @@
  * (c) madblade 2021
  */
 
+import './style/style.css';
+import 'bootstrap';
+
 import {
     ACESFilmicToneMapping,
     AmbientLight, BoxBufferGeometry, Mesh, MeshPhongMaterial,
@@ -11,11 +14,11 @@ import {
     Vector3,
     WebGLRenderer
 } from 'three';
-// import {OrbitControls}     from 'three/examples/jsm/controls/OrbitControls';
 
 import { EffectComposer }  from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import {OrbitControls} from "./OrbitControlsZoomFixed";
+import { OrbitControls } from './OrbitControlsZoomFixed';
+import { initHTML } from './html.gui';
 
 // screen size
 let WIDTH = window.innerWidth;
@@ -57,7 +60,6 @@ function initRenderer()
     renderer.outputEncoding = sRGBEncoding;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(WIDTH, HEIGHT);
-    document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
     let resizeCallback =  () => {
@@ -110,6 +112,7 @@ function init()
     initRenderer();
     initScene();
     initComposer();
+    initHTML(renderer);
 
     let walls = [
         new Mesh(
