@@ -8,7 +8,6 @@ import 'bootstrap';
 import {
     ACESFilmicToneMapping,
     AmbientLight, BoxBufferGeometry, Mesh, MeshPhongMaterial,
-    PCFSoftShadowMap,
     PerspectiveCamera, PointLight,
     Scene, sRGBEncoding,
     Vector3,
@@ -53,19 +52,38 @@ function initRenderer()
 {
     renderer = new WebGLRenderer({
         antialias: true,
-        logarithmicDepthBuffer: true
+        logarithmicDepthBuffer: true,
     });
+    renderer.userData = {
+        elementID: 'webgl1',
+        width: WIDTH,
+        height: HEIGHT
+    };
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.8;
     renderer.outputEncoding = sRGBEncoding;
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(WIDTH, HEIGHT);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = PCFSoftShadowMap;
+    // renderer.shadowMap.enabled = true;
+    // renderer.shadowMap.type = PCFSoftShadowMap;
     let resizeCallback =  () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const ud = renderer.userData;
+        const e = ud.elementID;
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+        if (e)
+        {
+            const elt = document.getElementById(e);
+            if (elt)
+            {
+                const r = elt.getBoundingClientRect();
+                w = r.width;
+                h = r.height;
+            }
+        }
+        camera.aspect = w / h;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(w, h);
     };
     window.addEventListener('resize', resizeCallback, false);
     window.addEventListener('orientationchange', resizeCallback, false);
@@ -104,15 +122,18 @@ function initScene()
 
     // user input
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.minDistance = 1;
+    controls.maxDistance = 10;
     controls.target.set(0, 0, 0);
 }
 
 function init()
 {
+    // const canvas = initHTML();
     initRenderer();
     initScene();
     initComposer();
-    initHTML(renderer);
+    initHTML(renderer, camera);
 
     let walls = [
         new Mesh(

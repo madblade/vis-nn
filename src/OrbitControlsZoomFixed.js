@@ -638,6 +638,7 @@ var OrbitControls = function(object, domElement) {
             dollyDelta.set(0, Math.pow(dollyEnd.y / dollyStart.y, scope.zoomSpeed));
             const y = Math.min(Math.max(Math.abs(dollyDelta.y), .1), 10) * Math.sign(dollyDelta.y);
             // dollyDelta.set(0, (dollyEnd.y - dollyStart.y) * 0.001);
+            if (y < 0.5) return;
             dollyOut(y);
             dollyStart.copy(dollyEnd);
             return;

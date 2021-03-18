@@ -1,2 +1,24 @@
 
 @import '~bootstrap/dist/css/bootstrap.min.css';
+
+#main {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.tab-content {
+    flex: 1;
+}
+
+#tab1 {
+    height: 100%;
+    display: flex;
+    position: relative;
+}
+
+#webgl1 {
+    flex: 1;
+}
