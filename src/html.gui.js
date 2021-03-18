@@ -25,6 +25,7 @@ const tabs = `
         </a>
     </li>
 </ul>
+
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
         Architecture
