@@ -4,6 +4,7 @@ import { InputComponent }   from './flow/InputComponent';
 import ContextMenuPlugin    from 'rete-context-menu-plugin';
 import ConnectionPlugin     from 'rete-connection-plugin';
 import VueRenderPlugin      from 'rete-vue-render-plugin';
+import {Menu} from 'rete-context-menu-plugin';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -51,7 +52,26 @@ function initFlow()
     const editor = new Rete.NodeEditor('demo@0.1.0', container);
     editor.use(VueRenderPlugin);
     editor.use(ConnectionPlugin, { curvature: 0.4 });
-    editor.use(ContextMenuPlugin);
+    editor.use(ContextMenuPlugin, {
+        vueComponent: {
+            extends: { ...Menu },
+            components: {
+                Search: {
+                    name: 'Search',
+                    template: '<div class="search"><input v-model="valuelocal"/></div>',
+                    props: ['value', 'search'],
+                    data() {
+                        return { valuelocal: this.value };
+                    },
+                    watch: {
+                        valuelocal() {
+                            this.$emit('search', this.valuelocal);
+                        }
+                    }
+                }
+            }
+        }
+    });
 
     // eng
     const engine = new Rete.Engine('demo@0.1.0');

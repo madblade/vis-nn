@@ -20,9 +20,17 @@ module.exports = function(env) {
         ],
 
         output: {
+            // eslint-disable-next-line no-undef
             path: path.resolve(__dirname, './dist'),
             publicPath: './',
             filename: '[name].[hash].js'
+        },
+
+        resolve: {
+            alias: {
+                vue$: 'vue/dist/vue.esm.js'
+            },
+            extensions: ['*', '.js', '.vue', '.json']
         },
 
         module: {
@@ -46,10 +54,25 @@ module.exports = function(env) {
                     use: ['style-loader', 'css-loader']
                 },
                 {
-                    test: /\.(png|svg|jpg|gif|fbx|glb)$/,
-                    use: ['file-loader'
+                    test: /\.sass$/,
+                    exclude: /node_modules/,
+                    use: [
+                        // Creates `style` nodes from JS strings
+                        'style-loader',
+                        // Translates CSS into CommonJS
+                        'css-loader',
+                        // Compiles Sass to CSS
+                        'sass-loader',
                     ],
                 },
+                {
+                    test: /\.(png|svg|jpg|gif|fbx|glb)$/,
+                    use: ['file-loader'],
+                },
+                {
+                    test: /\.vue$/,
+                    loader: 'vue-loader'
+                }
             ]
         },
 

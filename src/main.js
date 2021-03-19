@@ -2,6 +2,7 @@
  * (c) madblade 2021
  */
 
+import './style/flow.sass';
 import './style/style.css';
 import 'bootstrap';
 

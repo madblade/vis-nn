@@ -35,10 +35,13 @@
     "file-loader": "^6.2.0",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
+    "node-sass": "^5.0.0",
     "raw-loader": "^4.0.2",
+    "sass-loader": "^11.0.1",
     "style-loader": "^2.0.0",
     "three": "^0.126.1",
     "url-loader": "^4.1.1",
+    "vue": "^2.6.12",
     "webpack": "^5.26.3",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
