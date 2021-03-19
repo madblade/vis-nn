@@ -29,6 +29,8 @@ const tabs = `
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
         Architecture
+        <div id="rete">
+        </div>
     </div>
     <div class="tab-pane fade" id="tab2" role="tabpanel">
         Training
