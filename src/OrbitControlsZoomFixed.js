@@ -1056,4 +1056,4 @@ var MapControls = function(object, domElement) {
 MapControls.prototype = Object.create(EventDispatcher.prototype);
 MapControls.prototype.constructor = MapControls;
 
-export { OrbitControls, MapControls };
+export { OrbitControls, MapControls, isMobile };

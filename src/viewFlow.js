@@ -1,10 +1,10 @@
 
-import Rete                 from 'rete';
-import { InputComponent }   from './flow/InputComponent';
-import ContextMenuPlugin    from 'rete-context-menu-plugin';
-import ConnectionPlugin     from 'rete-connection-plugin';
-import VueRenderPlugin      from 'rete-vue-render-plugin';
-import {Menu} from 'rete-context-menu-plugin';
+import Rete                        from 'rete';
+import { InputComponent }          from './flow/InputComponent';
+import ContextMenuPlugin, { Menu } from 'rete-context-menu-plugin';
+import ConnectionPlugin            from 'rete-connection-plugin';
+import VueRenderPlugin             from 'rete-vue-render-plugin';
+import { isMobile }                from './OrbitControlsZoomFixed';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -73,6 +73,8 @@ function initFlow()
         }
     });
 
+    // editor.on('translate', );
+
     // eng
     const engine = new Rete.Engine('demo@0.1.0');
     // const modules = {};
@@ -83,6 +85,69 @@ function initFlow()
     editor.register(inputComponent);
     engine.register(inputComponent);
 
+    // to zoom
+    const { area } = editor.view;
+    // area.zoom(0.9 * area.transform.k, 0, 0);
+
+    const _zoom = area._zoom;
+    _zoom.destroy();
+    _zoom.move = function(e) {
+        _zoom.pointers = _zoom.pointers.map(p => p.pointerId === e.pointerId ? e : p)
+        if (!_zoom.translating) return;
+
+        let rect = _zoom.el.getBoundingClientRect();
+
+        let { cx, cy, distance } = _zoom.touches();
+
+        if (_zoom.previous !== null) {
+
+            const mobile = isMobile();
+            if (mobile)
+            {
+                let delta = distance / _zoom.previous.distance - 1;
+                const ox = (rect.left - cx) * delta;
+                const oy = (rect.top - cy) * delta;
+                _zoom.onzoom(delta, ox - (_zoom.previous.cx - cx), oy - (_zoom.previous.cy - cy), 'touch');
+            }
+            else
+            {
+                if (!_zoom.oldcy) {
+                    _zoom.oldcy = cy;
+                    return;
+                }
+                e.preventDefault();
+                const deltaY = _zoom.oldcy - cy;
+                const delta = -deltaY / 100 * _zoom.intensity;
+                _zoom.onzoom(delta, 0, 0, 'wheel');
+                _zoom.oldcy = cy;
+            }
+        }
+        _zoom.previous = { cx, cy, distance };
+    };
+    _zoom.end = function(e)
+    {
+        _zoom.previous = null;
+        _zoom.pointers = _zoom.pointers.filter(p => p.pointerId !== e.pointerId);
+        _zoom.oldcy = 0;
+    };
+    function listenWindow(e, h) {
+        window.addEventListener(e, h);
+        return () => window.removeEventListener(e, h);
+    }
+    const destroyMove = listenWindow('pointermove', _zoom.move.bind(_zoom));
+    const destroyUp = listenWindow('pointerup', _zoom.end.bind(_zoom));
+    const destroyCancel = listenWindow('pointercancel', _zoom.end.bind(_zoom));
+    _zoom.destroy = () => { destroyMove(); destroyUp(); destroyCancel(); };
+
+    // to disable dbclick
+    editor.on('zoom', input => {
+        const source = input.source;
+
+        // prevent double click scroll
+        if (source === 'dbclick') return false;
+    });
+
+    // wrapup
     async function compile() {
         const json = editor.toJSON();
         await engine.abort();
