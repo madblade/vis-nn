@@ -51,7 +51,8 @@ function initEditor(editor)
             components: {
                 Search: {
                     name: 'Search',
-                    template: '<div class="search"><input v-model="valuelocal"/></div>',
+                    // template: '<div class="search"><input v-model="valuelocal"/></div>',
+                    template: '<div class="search">Add</div>',
                     props: ['value', 'search'],
                     data() {
                         return { valuelocal: this.value };

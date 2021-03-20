@@ -40,7 +40,7 @@ body {
     background-color: transparent !important;
     /*border: 2px solid #4e58bf;*/
     border-radius: 3px 3px 0 0 !important;
-    border: 1px solid transparent;
+    border: 1px solid transparent !important;
     cursor: pointer;
     min-width: 180px;
     height: auto;
@@ -63,7 +63,7 @@ body {
     font-family: 'Consolas', monospace !important;
     font-size: 18px;
     padding: 4px 8px !important;
-    border-bottom: 1px solid #5b5d60;
+    border-bottom: 1px solid #5b5d60 !important;
 }
 .node > .control, .note > .input, .node > .output {
     /*background-color: transparent;*/
@@ -94,7 +94,7 @@ body {
     padding: 6px 18px;
 }
 
-/* Socket customization here */
+/* Socket customization */
 .socket {
     display: inline-block;
     cursor: pointer;
@@ -120,4 +120,45 @@ body {
 }
 .socket.input {
     margin-left: -12px;
+}
+
+/* Context menu */
+.search {
+    color: #acadae !important;
+    background-color: rgba(91, 93, 96, 0.8) !important;
+}
+.context-menu {
+    background-color: transparent !important;
+    left: 0;
+    top: 0;
+    position: fixed;
+    padding: 10px;
+    width: 140px;
+    margin-top: -20px;
+    margin-left: -60px;
+}
+.context-menu .item, .context-menu .subitem {
+    color: #fff;
+    padding: 4px;
+    border-bottom: 1px solid grey;
+    background-color: grey;
+    cursor: pointer;
+    width: 100%;
+    position: relative;
+}
+.context-menu .search {
+    background: red;
+}
+.context-menu .item.hasSubitems:after {
+    content: '►' !important;
+    position: absolute;
+    opacity: 0.6;
+    right: 5px;
+    top: 5px;
+}
+.context-menu .item .subitems {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 120px;
 }
