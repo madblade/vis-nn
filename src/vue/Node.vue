@@ -107,4 +107,7 @@ $socket-margin: 10px
         width: 100%
         //padding: $socket-margin $socket-size/2 + $socket-margin
         padding: socket-margin $socket-size/2 + $socket-margin
+        //.number-input
+        //    border-radius: 3px
+        //    background-color: transparent !important
 </style>

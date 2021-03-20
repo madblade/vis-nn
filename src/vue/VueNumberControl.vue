@@ -5,6 +5,7 @@
         :value="value"
         @input="onChange($event)"
         @mousedown.stop
+        class="number-input"
     />
 </template>
 

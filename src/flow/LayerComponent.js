@@ -31,9 +31,9 @@ class DenseLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        outputs.dense = node.data.dense;
-        console.log(inputs);
-        console.log(outputs);
+        outputs.size = node.data.size;
+        // console.log(inputs);
+        // console.log(outputs);
     }
 }
 

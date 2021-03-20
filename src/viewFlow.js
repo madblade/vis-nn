@@ -162,7 +162,7 @@ function fixZoomOnChromeTouchpad(area)
 
 function initFlow()
 {
-    NUM_SOCKET = new Rete.Socket('Architecture');
+    NUM_SOCKET = new Rete.Socket('Number');
     // ACTION_SOCKET = new Rete.Socket('Action');
     // DATA_SOCKET = new Rete.Socket('Data');
 
