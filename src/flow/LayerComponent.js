@@ -1,12 +1,18 @@
 
 import Rete           from 'rete';
 import { NUM_SOCKET } from '../viewFlow';
+import Node           from '../vue/Node';
 
 class DenseLayerComponent extends Rete.Component
 {
     constructor()
     {
         super('Dense');
+        // this.component = Node;
+        this.data = {
+            render: 'vue',
+            component: Node
+        };
     }
 
     builder(node)

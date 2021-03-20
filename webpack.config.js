@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = function(env) {
     return {
@@ -16,7 +17,8 @@ module.exports = function(env) {
                 baseUrl: env.development ?
                     '/' : 'https://madblade.github.io/nn-vis/'
             }),
-            new webpack.HotModuleReplacementPlugin()
+            new webpack.HotModuleReplacementPlugin(),
+            new VueLoaderPlugin()
         ],
 
         output: {
@@ -58,11 +60,20 @@ module.exports = function(env) {
                     exclude: /node_modules/,
                     use: [
                         // Creates `style` nodes from JS strings
-                        'style-loader',
+                        // 'style-loader',
+                        'vue-style-loader',
                         // Translates CSS into CommonJS
                         'css-loader',
                         // Compiles Sass to CSS
-                        'sass-loader',
+                        // 'sass-loader',
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sassOptions: {
+                                    indentedSyntax: true
+                                }
+                            }
+                        }
                     ],
                 },
                 {
@@ -72,6 +83,10 @@ module.exports = function(env) {
                 {
                     test: /\.vue$/,
                     loader: 'vue-loader'
+                },
+                {
+                    test: /\.pug$/,
+                    loader: 'pug-plain-loader'
                 }
             ]
         },

@@ -65,9 +65,8 @@ body {
     padding: 4px 8px !important;
     border-bottom: 1px solid #5b5d60 !important;
 }
-.node > .control, .note > .input, .node > .output {
-    /*background-color: transparent;*/
-    background-color: #4c4e51;
+.node > .control, .node > .input, .node > .output {
+    background-color: #4c4e51 !important;
 }
 .node .output {
     text-align: right;
