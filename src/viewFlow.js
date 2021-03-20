@@ -171,8 +171,6 @@ function initFlow()
     const editor = new Rete.NodeEditor('demo@0.1.0', container);
     initEditor(editor);
 
-    // editor.on('translate', );
-
     // eng
     const engine = new Rete.Engine('demo@0.1.0');
     // const modules = {};
@@ -180,8 +178,8 @@ function initFlow()
 
     // comp
     const inputComponent = new InputComponent();
-    const denseComponent = new DenseLayerComponent();
-    const conv2dComponent = new Conv2DLayerComponent();
+    const denseComponent = new DenseLayerComponent(editor);
+    const conv2dComponent = new Conv2DLayerComponent(editor);
 
     // register
     editor.register(inputComponent);
@@ -201,7 +199,7 @@ function initFlow()
         const source = input.source;
 
         // prevent double click scroll
-        if (source === 'dbclick') return false;
+        if (source === 'dblclick') return false;
     });
 
     // wrapup

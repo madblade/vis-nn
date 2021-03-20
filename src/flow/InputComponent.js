@@ -16,7 +16,7 @@ class InputComponent extends Rete.Component
 
     builder(node)
     {
-        let out = new Rete.Output('in', 'Input', NUM_SOCKET);
+        let out = new Rete.Output('in', 'O', NUM_SOCKET);
 
         node.addOutput(out);
     }

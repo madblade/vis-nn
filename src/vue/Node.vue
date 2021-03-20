@@ -7,15 +7,21 @@
                     Socket(v-socket:input="input", type="input", :socket="input.socket", :used="input.connections.length > 0")
                     .input-title(v-show='!input.showControl()') {{input.name}}
                     .input-control(v-show='input.showControl()', v-control='input.control')
-                .control(v-for='control in controls()',
-                    style='text-align: center',
-                    :style='{ width: control.parent.width - 2 * control.margin, height: control.height }',
-                    v-control='control'
-                )
+
             .column
                 .outputs(v-for='output in outputs()')
                     .output-title {{output.name}}
                     Socket(v-socket:output="output", type="output", :socket="output.socket", :used="output.connections.length > 0")
+
+        .content
+            .column
+                .control-label(v-for='control in controls()', style='text-align: center')
+                    .control-title(v-show="true") {{control.title}}
+            .column
+                .control(v-for='control in controls()',
+                    style='text-align: center',
+                    v-control='control')
+                    //:style='{ width: control.parent.width - 2 * control.margin, height: control.height }',
 </template>
 
 <script>
@@ -94,7 +100,11 @@ $socket-margin: 10px
         z-index: 1
         vertical-align: middle
         display: inline-block
+    .control-title
+        padding-left: 20px
+        color: #acadae
     .control
         width: 100%
-        padding: $socket-margin $socket-size/2 + $socket-margin
+        //padding: $socket-margin $socket-size/2 + $socket-margin
+        padding: socket-margin $socket-size/2 + $socket-margin
 </style>
