@@ -1,26 +1,33 @@
 
 $grid-size: 170px
-$grid-color: #363636
-$dark-color: darken($grid-color, 10%)
-$th: 0.008
+$blender-color: #393939
+$grid-color: #2f2f2f // darken($blender-color, 10%) // #5b5d60 // #363636
+$dark-color: #212121 // darken($blender-color, 5%) //darken($grid-color, 10%)
+$th: 0.004
+$big: 2
 
 @function line($dir, $t, $w, $color)
     $start: $grid-size * $t - $w * $grid-size
-    $end: $grid-size * $t + $w * $grid-size
+    $end: $grid-size * $t //+ $w * $grid-size
     @return linear-gradient(to $dir, transparent $start, $color $start, $color $end, transparent $end)
 
 @function lines($dir)
-    @return line($dir, 0.5, $th * 2, $grid-color), line($dir, 0.25, $th, $grid-color), line($dir, 0.75, $th, $grid-color), line($dir, 1, $th * 2, $grid-color)
+    //@return line($dir, 0.5, $th * 2, $grid-color), line($dir, 0.25, $th, $grid-color), line($dir, 0.75, $th, $grid-color), line($dir, 1, $th * 2, $grid-color)
+    @return line($dir, 0.2, $th * 2, $grid-color), line($dir, 0.4, $th * 2, $grid-color), line($dir, 0.6, $th * 2, $grid-color), line($dir, 0.8, $th * 2, $grid-color)
+    //@return line($dir, 1, $th * 2, $grid-color)
+    //@return line($dir, 0.25, $th, $grid-color), line($dir, 0.75, $th, $grid-color)
 
 //.custom-node-editor
 #rete
     //.background
         //z-index: -5
     background-size: $grid-size $grid-size
-    background-image: line(right, 0.5, $th * 3, $dark-color), line(bottom, 0.5, $th * 3, $dark-color), lines(right), lines(bottom)
-    background-color: darken($grid-color, 6%)
+    background-image: line(right, 1, $th * $big, $dark-color), line(bottom, 1, $th * $big, $dark-color), lines(right), lines(bottom)
+    //background-image: lines(right), lines(bottom)
+    background-color: #393939 // #343537 // darken($grid-color, 6%)
     *
         box-sizing: border-box
+    //background-repeat: no-repeat
 
     .connection path
         fill: none
