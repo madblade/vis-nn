@@ -23,30 +23,30 @@ $socket-margin: 10px
 .socket
     display: inline-block
     cursor: pointer
-    border: 2px solid white
+    border: 1px solid white
     border-radius: $socket-size/2.0
     width: $socket-size
     height: $socket-size
-    margin: $socket-margin !important
+    //margin: $socket-margin !important
     vertical-align: middle
-    background: transparent
+    background: #b3928a !important
     position: relative
     z-index: 2
     &.used
-        background: white
-    &:after
-        content: ''
-        position: absolute
-        width: 0
-        height: 0
-        top: $socket-size/4-1px
-        left: $socket-size
-        display: inline-block
-        border-style: solid
-        border-width: $socket-size/4 0 $socket-size/4 $socket-size/6
-        border-color: transparent transparent transparent white
+        background: #96b38a !important
+    //&:after
+    //    content: ''
+    //    position: absolute
+    //    width: 0
+    //    height: 0
+    //    top: $socket-size/4-1px
+    //    left: $socket-size
+    //    display: inline-block
+    //    border-style: solid
+    //    border-width: $socket-size/4 0 $socket-size/4 $socket-size/6
+    //    border-color: transparent transparent transparent white
     &:hover
-        border: 2px solid #777
+        border: 3px solid #fff
     &.multiple
         border-color: yellow
 </style>

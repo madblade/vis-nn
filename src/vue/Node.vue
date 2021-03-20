@@ -43,34 +43,35 @@ $socket-size: 16px
 $socket-margin: 10px
 
 .node
-    background: $node-color
-    box-shadow: 1px solid black
-    border: 1px solid black
-    border-radius: 10px
+    background-color: transparent !important
+    border-radius: 3px 3px 0 0 !important
+    border: 1px solid transparent !important
     cursor: pointer
     display: inline-block
     height: auto
-    padding-bottom: 6px
+    //padding-bottom: 6px
     box-sizing: content-box
-    box-shadow: 4px 5px 9px rgba(0,0,0,0.5)
+    box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.2)
     &:hover
-        background: $node-color
-    &.active
-        background: $color-active
-        border: 1px solid #ffd252
+        //background: $node-color
+        border-color: grey !important
+    //&.active
+    //&.active, &.selected
+        //border-color: white !important
+        //background: $color-active
+        //border: 1px solid #ffd252
     .title
-        border-top: 1px solid #ccc
-        color: white
+        color: #acadae !important
+        background-color: rgba(91, 93, 96, 0.8) !important
         text-align: center
-        font-weight: bold
-        font-family: sans-serif
+        font-family: 'Consolas', monospace !important
         font-size: 18px
-        border-radius: 10px 10px 0 0
+        border-radius: 3px 3px 0 0
         padding: 8px
         overflow: hidden
-        background: linear-gradient(to top, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 40%, rgba(255, 255, 255, 0.19) 100%), radial-gradient(70% 40px at center, $title-light 0%, $title-light-transparent 60%)
     .content
         display: table
+        background-color: #4c4e51 !important
         width: 100%
         .column
             display: table-cell
@@ -85,7 +86,7 @@ $socket-margin: 10px
         vertical-align: middle
         color: white
         display: inline-block
-        font-family: sans-serif
+        font-family: 'Consolas', monospace !important
         font-size: 14px
         margin: $socket-margin 0
         line-height: $socket-size

@@ -37,6 +37,10 @@ class Conv2DLayerComponent extends Rete.Component
     constructor()
     {
         super('Conv2D');
+        this.data = {
+            render: 'vue',
+            component: Node
+        };
     }
 
     builder(node)
