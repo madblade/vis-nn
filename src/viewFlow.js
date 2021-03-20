@@ -4,7 +4,8 @@ import { InputComponent }          from './flow/InputComponent';
 import ContextMenuPlugin, { Menu } from 'rete-context-menu-plugin';
 import ConnectionPlugin            from 'rete-connection-plugin';
 import VueRenderPlugin             from 'rete-vue-render-plugin';
-import { isMobile }                from './OrbitControlsZoomFixed';
+import { isMobile }                                  from './OrbitControlsZoomFixed';
+import { Conv2DLayerComponent, DenseLayerComponent } from './flow/LayerComponent';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -46,7 +47,26 @@ function initEditor(editor)
     editor.use(VueRenderPlugin);
     editor.use(ConnectionPlugin, { curvature: 0.4 });
     editor.use(ContextMenuPlugin, {
+        delay: 10000000,
+        allocate(component) {
+            switch (component.name)
+            {
+                case 'Input': return [];
+                case 'Dense': return ['Layers'];
+                case 'Conv2D': return ['Layers'];
+            }
+            return null;
+        },
         vueComponent: {
+            // template: `
+            //     <div class="context-menu"
+            //         ref="menu"
+            //         v-if="visible"
+            //         v-bind:style="style"
+            //         @mouseleave="timeoutHide()" @mouseover="cancelHide()" @contextmenu.prevent=""
+            //     >
+            //       <Item v-for="item in filtered" :key="item.title" :item="item" :args="args" :delay="delay / 2"></Item>
+            //     </div>`,
             extends: { ...Menu },
             components: {
                 Search: {
@@ -62,7 +82,26 @@ function initEditor(editor)
                             this.$emit('search', this.valuelocal);
                         }
                     }
-                }
+                },
+                // Item: {
+                //     name: 'Item',
+                //     template: `<div class="item"
+                //         @click="onClick($event)"
+                //         @mouseover="showSubitems()"
+                //         @mouseleave="timeoutHide()"
+                //         :class="{ hasSubitems }"
+                //         > {{item.title}}
+                //         <div class="subitems" v-show="hasSubitems && this.visibleSubitems">
+                //             <Item v-for="subitem in item.subitems"
+                //             :key="subitem.title"
+                //             :item="subitem"
+                //             :args="args"
+                //             :delay="delay"
+                //             ></Item>
+                //         </div>
+                //     </div>`,
+                //     extends: { ...Item }
+                // }
             }
         }
     });
@@ -141,8 +180,16 @@ function initFlow()
 
     // comp
     const inputComponent = new InputComponent();
+    const denseComponent = new DenseLayerComponent();
+    const conv2dComponent = new Conv2DLayerComponent();
+
+    // register
     editor.register(inputComponent);
+    editor.register(denseComponent);
+    editor.register(conv2dComponent);
     engine.register(inputComponent);
+    engine.register(denseComponent);
+    engine.register(conv2dComponent);
 
     // to zoom
     const { area } = editor.view;
@@ -168,7 +215,6 @@ function initFlow()
         () =>
         {
             if (editor.silent) return;
-
             eventHandlers.clear();
             compile();
         }

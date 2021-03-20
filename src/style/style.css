@@ -116,38 +116,47 @@ body {
     border-color: yellow;
 }
 .socket.output {
-    margin-right: -12px;
+    margin-right: -10px !important;
 }
 .socket.input {
-    margin-left: -12px;
+    margin-left: -10px !important;
 }
 
 /* Context menu */
 .search {
     color: #acadae !important;
     background-color: rgba(91, 93, 96, 0.8) !important;
+    border-radius: 3px 3px 0 0 !important;
+    border: 1px solid transparent !important;
 }
 .context-menu {
+    font-family: 'Consolas', monospace !important;
     background-color: transparent !important;
+    border-radius: 3px 3px 0 0 !important;
+    border: 1px solid transparent !important;
     left: 0;
     top: 0;
     position: fixed;
     padding: 10px;
-    width: 140px;
-    margin-top: -20px;
-    margin-left: -60px;
+    width: 200px !important;
+    /*margin-top: -20px;*/
+    /*margin-left: -60px;*/
 }
 .context-menu .item, .context-menu .subitem {
-    color: #fff;
+    border-radius: 0 !important;
+    color: #000 !important;
     padding: 4px;
-    border-bottom: 1px solid grey;
-    background-color: grey;
+    border-bottom: 1px solid grey !important;
+    background-color: rgba(128, 128, 128, 0.9) !important;
     cursor: pointer;
     width: 100%;
     position: relative;
 }
+.context-menu .item:hover, .context-menu .subitem:hover {
+    background-color: rgba(156, 156, 156, 0.9) !important;
+}
 .context-menu .search {
-    background: red;
+    background-color: rgba(91, 93, 96, 0.8) !important;
 }
 .context-menu .item.hasSubitems:after {
     content: '►' !important;
