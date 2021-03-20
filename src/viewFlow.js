@@ -41,15 +41,8 @@ const eventHandlers = {
     }
 };
 
-function initFlow()
+function initEditor(editor)
 {
-    NUM_SOCKET = new Rete.Socket('Architecture');
-    // ACTION_SOCKET = new Rete.Socket('Action');
-    // DATA_SOCKET = new Rete.Socket('Data');
-
-    // init
-    const container = document.querySelector('#rete');
-    const editor = new Rete.NodeEditor('demo@0.1.0', container);
     editor.use(VueRenderPlugin);
     editor.use(ConnectionPlugin, { curvature: 0.4 });
     editor.use(ContextMenuPlugin, {
@@ -72,35 +65,22 @@ function initFlow()
             }
         }
     });
+}
 
-    // editor.on('translate', );
-
-    // eng
-    const engine = new Rete.Engine('demo@0.1.0');
-    // const modules = {};
-    // editor.use(ModulePlugin.default, { engine, modules });
-
-    // comp
-    const inputComponent = new InputComponent();
-    editor.register(inputComponent);
-    engine.register(inputComponent);
-
-    // to zoom
-    const { area } = editor.view;
-    // area.zoom(0.9 * area.transform.k, 0, 0);
-
+function fixZoomOnChromeTouchpad(area)
+{
     const _zoom = area._zoom;
     _zoom.destroy();
     _zoom.move = function(e) {
-        _zoom.pointers = _zoom.pointers.map(p => p.pointerId === e.pointerId ? e : p)
+        _zoom.pointers = _zoom.pointers.map(p => (p.pointerId === e.pointerId ? e : p));
         if (!_zoom.translating) return;
 
         let rect = _zoom.el.getBoundingClientRect();
 
         let { cx, cy, distance } = _zoom.touches();
 
-        if (_zoom.previous !== null) {
-
+        if (_zoom.previous !== null)
+        {
             const mobile = isMobile();
             if (mobile)
             {
@@ -138,6 +118,35 @@ function initFlow()
     const destroyUp = listenWindow('pointerup', _zoom.end.bind(_zoom));
     const destroyCancel = listenWindow('pointercancel', _zoom.end.bind(_zoom));
     _zoom.destroy = () => { destroyMove(); destroyUp(); destroyCancel(); };
+}
+
+function initFlow()
+{
+    NUM_SOCKET = new Rete.Socket('Architecture');
+    // ACTION_SOCKET = new Rete.Socket('Action');
+    // DATA_SOCKET = new Rete.Socket('Data');
+
+    // init
+    const container = document.querySelector('#rete');
+    const editor = new Rete.NodeEditor('demo@0.1.0', container);
+    initEditor(editor);
+
+    // editor.on('translate', );
+
+    // eng
+    const engine = new Rete.Engine('demo@0.1.0');
+    // const modules = {};
+    // editor.use(ModulePlugin.default, { engine, modules });
+
+    // comp
+    const inputComponent = new InputComponent();
+    editor.register(inputComponent);
+    engine.register(inputComponent);
+
+    // to zoom
+    const { area } = editor.view;
+    // area.zoom(0.9 * area.transform.k, 0, 0);
+    fixZoomOnChromeTouchpad(area);
 
     // to disable dbclick
     editor.on('zoom', input => {
