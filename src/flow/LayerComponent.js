@@ -22,7 +22,7 @@ class DenseLayerComponent extends Rete.Component
         let input = new Rete.Input('din', 'I', NUM_SOCKET);
         let out = new Rete.Output('dense', 'O', NUM_SOCKET);
 
-        let control = new NumberControl(this.editor, 'size', 'Size', 'number', false);
+        let control = new NumberControl(this.editor, 'size', 'Units', 'number', false);
 
         node.addInput(input);
         node.addControl(control);
@@ -53,7 +53,18 @@ class Conv2DLayerComponent extends Rete.Component
         let input = new Rete.Input('cin', 'I', NUM_SOCKET);
         let out = new Rete.Output('conv', 'O', NUM_SOCKET);
 
+        let fcontrol = new NumberControl(this.editor, 'filters', 'Filters', 'number', false);
+        let kxcontrol = new NumberControl(this.editor, 'kx', 'Kernel X', 'number', false);
+        let kycontrol = new NumberControl(this.editor, 'ky', 'Kernel Y', 'number', false);
+        let sxcontrol = new NumberControl(this.editor, 'sx', 'Stride X', 'number', false);
+        let sycontrol = new NumberControl(this.editor, 'sy', 'Stride Y', 'number', false);
+
         node.addInput(input);
+        node.addControl(fcontrol);
+        node.addControl(kxcontrol);
+        node.addControl(kycontrol);
+        node.addControl(sxcontrol);
+        node.addControl(sycontrol);
         node.addOutput(out);
     }
 

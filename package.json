@@ -61,6 +61,7 @@
   "dependencies": {
     "@babel/runtime": "^7.13.10",
     "@tensorflow/tfjs": "^3.3.0",
+    "@tensorflow/tfjs-vis": "^1.5.0",
     "bootstrap": "^4.6.0",
     "jquery": "^3.6.0",
     "rete": "^1.4.5-rc.1",

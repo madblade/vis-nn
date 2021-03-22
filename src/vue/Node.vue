@@ -13,15 +13,16 @@
                     .output-title {{output.name}}
                     Socket(v-socket:output="output", type="output", :socket="output.socket", :used="output.connections.length > 0")
 
-        .content
-            .column
-                .control-label(v-for='control in controls()', style='text-align: center')
-                    .control-title(v-show="true") {{control.title}}
-            .column
-                .control(v-for='control in controls()',
-                    style='text-align: center',
+        table
+            tr.content(v-for='control in controls()')
+                td.column
+                    .control-label(style='text-align: center')
+                        .control-title(v-show="true") {{control.title}}
+                td.column
+                    .control(style='text-align: center',
                     v-control='control')
-                    //:style='{ width: control.parent.width - 2 * control.margin, height: control.height }',
+                    //.control(v-for='control in controls()',
+                        //:style='{ width: control.parent.width - 2 * control.margin, height: control.height }',
 </template>
 
 <script>
