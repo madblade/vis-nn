@@ -13,8 +13,8 @@
                     .output-title {{output.name}}
                     Socket(v-socket:output="output", type="output", :socket="output.socket", :used="output.connections.length > 0")
 
-        table
-            tr.content(v-for='control in controls()')
+        table.content
+            tr(v-for='control in controls()')
                 td.column
                     .control-label(style='text-align: center')
                         .control-title(v-show="true") {{control.title}}

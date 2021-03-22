@@ -53,18 +53,14 @@ class Conv2DLayerComponent extends Rete.Component
         let input = new Rete.Input('cin', 'I', NUM_SOCKET);
         let out = new Rete.Output('conv', 'O', NUM_SOCKET);
 
-        let fcontrol = new NumberControl(this.editor, 'filters', 'Filters', 'number', false);
-        let kxcontrol = new NumberControl(this.editor, 'kx', 'Kernel X', 'number', false);
-        let kycontrol = new NumberControl(this.editor, 'ky', 'Kernel Y', 'number', false);
-        let sxcontrol = new NumberControl(this.editor, 'sx', 'Stride X', 'number', false);
-        let sycontrol = new NumberControl(this.editor, 'sy', 'Stride Y', 'number', false);
+        let fControl = new NumberControl(this.editor, 'filters', 'Filters', 'number', false, 1);
+        let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
+        let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
 
         node.addInput(input);
-        node.addControl(fcontrol);
-        node.addControl(kxcontrol);
-        node.addControl(kycontrol);
-        node.addControl(sxcontrol);
-        node.addControl(sycontrol);
+        node.addControl(fControl);
+        node.addControl(kControl);
+        node.addControl(sControl);
         node.addOutput(out);
     }
 

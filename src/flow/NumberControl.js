@@ -4,16 +4,17 @@ import VueNumberControl from '../vue/VueNumberControl';
 
 class NumberControl extends Rete.Control
 {
-    constructor(emitter, key, title, type, readonly)
+    constructor(emitter, key, title, type, readonly, initial)
     {
         super(key);
-        this.component = VueNumberControl;
         this.title = title;
+        this.component = VueNumberControl;
         this.props = {
             emitter,
             ikey: key,
             type,
             readonly,
+            initial,
             change: () => this.onChange()
         };
         this.data.render = 'vue';

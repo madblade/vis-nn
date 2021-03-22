@@ -38,10 +38,14 @@ export default {
     },
     mounted() {
         this.value = this.getData(this.ikey);
+        if (this.value === undefined)
+        {
+            this.value = this.initial;
+            this.update();
+        }
     }
 }
 </script>
-
 
 <style lang="sass" scoped>
 input
