@@ -1,8 +1,9 @@
 
-import Rete              from 'rete';
-import { NUM_SOCKET }    from '../viewFlow';
-import Node              from '../vue/Node';
-import { NumberControl } from './NumberControl';
+import Rete                from 'rete';
+import { NUM_SOCKET }      from '../viewFlow';
+import Node                from '../vue/Node';
+import { NumberControl }   from './NumberControl';
+import { DropDownControl } from './DropDownControl';
 
 class DenseLayerComponent extends Rete.Component
 {
@@ -56,11 +57,13 @@ class Conv2DLayerComponent extends Rete.Component
         let fControl = new NumberControl(this.editor, 'filters', 'Filters', 'number', false, 1);
         let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
         let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
+        let aControl = new DropDownControl(this.editor, 'a', 'Activation',  ['option1', 'option2']);
 
         node.addInput(input);
         node.addControl(fControl);
         node.addControl(kControl);
         node.addControl(sControl);
+        node.addControl(aControl);
         node.addOutput(out);
     }
 

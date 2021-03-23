@@ -1,5 +1,6 @@
 
 @import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~vue-select/dist/vue-select.css';
 
 body {
     overflow: hidden;
@@ -170,7 +171,6 @@ body {
     left: 100%;
     width: 120px;
 }
-
 
 .number-input {
     border-radius: 4px !important;

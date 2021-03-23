@@ -77,12 +77,25 @@ module.exports = function(env) {
                     ],
                 },
                 {
+                    test: /\.scss$/,
+                    exclude: /node_modules/,
+                    use: [
+                        // Creates `style` nodes from JS strings
+                        // 'style-loader',
+                        'vue-style-loader',
+                        // Translates CSS into CommonJS
+                        'css-loader',
+                        // Compiles Scss to CSS
+                        'sass-loader',
+                    ],
+                },
+                {
                     test: /\.(png|svg|jpg|gif|fbx|glb)$/,
                     use: ['file-loader'],
                 },
                 {
                     test: /\.vue$/,
-                    loader: 'vue-loader'
+                    loader: 'vue-loader',
                 },
                 {
                     test: /\.pug$/,
