@@ -1,62 +1,53 @@
 <template>
-    <div
-        class="dropdown"
-        @click="toggleRiskLevels"
-        :class="{ expanded: isExpanded }"
-        :style="computedStyles"
-    >
-        <div class="dropdown-label-container">
-            <div class="dropdown-label">
-        <span class="text">
-          {{ (config && config.prefix ? config.prefix : "") + " "
-            }}{{ config && config.placeholder ? config.placeholder : placeholder }}
-        </span>
-                <i class="angle-down" :class="{ toggled: isExpanded }"></i>
-            </div>
-        </div>
+<!--    <div-->
+<!--        class="dropdown"-->
+<!--        @click="toggleRiskLevels"-->
+<!--        :class="{ expanded: isExpanded }"-->
+<!--        :style="computedStyles"-->
+<!--    >-->
+<!--        <div class="dropdown-label-container">-->
+<!--            <div class="dropdown-label">-->
+<!--        <span class="text">-->
+<!--          {{ (config && config.prefix ? config.prefix : "") + " "-->
+<!--            }}{{ config && config.placeholder ? config.placeholder : placeholder }}-->
+<!--        </span>-->
+<!--                <i class="angle-down" :class="{ toggled: isExpanded }"></i>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div v-expand="isExpanded" class="options expand">
-            <div
-                v-for="option in configOptions"
-                class="option"
-                @click="setCurrentSelectedOption(option);"
-            >{{ option.value }}
-            </div>
-        </div>
-    </div>
+<!--        <div v-expand="isExpanded" class="options expand">-->
+<!--            <div-->
+<!--                v-for="option in configOptions"-->
+<!--                class="option"-->
+<!--                @click="setCurrentSelectedOption(option);"-->
+<!--            >{{ option.value }}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <v-select :options="options" @input="setCurrentSelectedOption"
+              :clearable="false"
+              :searchable="false"
+              :filterable="false"
+              v-model="sel"
+    >
+    </v-select>
 </template>
 <script>
 export default {
     name: "dropdown",
     data() {
         return {
-            isBottomSectionToggled: false,
-            optionsHeight: 0,
-            optionHeight: 35,
-            configOptions: [
-                {
-                    value: "option 1"
-                },
-                {
-                    value: "option 2"
-                },
-                {
-                    value: "option 3"
-                }
-            ],
-            backgroundColor: "#cde4f5",
-            backgroundExpandedColor: "#fff",
-            hoverBackgroundColor: "#0084d4",
-            isExpanded: false,
-            placeholder: "Placeholder",
-            textColor: "black",
-            borderRadius: "1.5em",
-            border: "1px solid gray",
-            width: 180
+            sel: this.selected
+            // configOptions: [
+            //     'linear',
+            //     'relu',
+            //     'tanh',
+            //     'sigmoid'
+            // ],
         };
     },
     components: {},
-    props: ["config"],
+    props: ["config", 'emitter', 'change', 'options', 'selected'],
     computed: {
         computedStyles: function () {
             console.log('style computed');
@@ -109,45 +100,17 @@ export default {
             this.isExpanded = !this.isExpanded;
         },
         setCurrentSelectedOption(option) {
-            this.$emit("setSelectedOption", option);
+            this.emitter.trigger("process");
+            this.change(option);
         },
         setConfigData() {
             if (this.config) {
-                this.configOptions = this.config.options;
-                this.width = this.config.width;
-                this.placeholder = this.config.placeholder;
-                if (this.config.backgroundColor) {
-                    this.backgroundColor = this.config.backgroundColor;
-                }
-                if (this.config.backgroundExpandedColor) {
-                    this.backgroundExpandedColor = this.config.backgroundExpandedColor;
-                }
-                if (this.config.border) {
-                    this.border = this.config.border;
-                }
-                if (this.config.hoverBackgroundColor) {
-                    this.hoverBackgroundColor = this.config.hoverBackgroundColor;
-                }
-                if (this.config.textColor) {
-                    this.textColor = this.config.textColor;
-                }
-                if (this.config.borderRadius) {
-                    this.borderRadius = this.config.borderRadius;
-                }
+                // this.configOptions = this.config.options;
             }
         },
-        setOptionsHeight() {
-            this.optionsHeight = this.optionHeight * this.configOptions.length;
-        }
     },
     created() {
         this.setConfigData();
-        this.setOptionsHeight();
-        console.log('computed');
-        console.log(this.optionsHeight);
-    },
-    beforeUdate() {
-        // this.setOptionsHeight();
     },
     mounted() {
     }

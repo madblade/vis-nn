@@ -57,6 +57,17 @@ body {
     /*background: transparent !important;*/
     border-color: white !important;
 }
+input.vs__search {
+    /*display: none;*/
+    /*position: absolute;*/
+    padding-left: 0;
+    padding-right: 0;
+    border-right: 0;
+    max-width: 1px;
+}
+.vs__selected {
+    color: #acadae;
+}
 .node .title {
     color: #acadae !important;
     background-color: rgba(91, 93, 96, 0.8) !important;

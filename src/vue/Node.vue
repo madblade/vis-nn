@@ -63,8 +63,8 @@ $socket-margin: 10px
         //background: $node-color
         border-color: grey !important
     //&.active
-    //&.active, &.selected
-        //border-color: white !important
+    //&:active, &.selected
+        //border: 1px solid red !important
         //background: $color-active
         //border: 1px solid #ffd252
     .title
