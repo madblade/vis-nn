@@ -63,10 +63,28 @@ input.vs__search {
     padding-left: 0;
     padding-right: 0;
     border-right: 0;
-    max-width: 1px;
 }
 .vs__selected {
     color: #acadae;
+    margin-right: 0;
+    margin-left: 0;
+}
+.vs__open-indicator>path {
+    fill: #acadae;
+}
+.vs__dropdown-toggle {
+    border: 1px solid #5b5d60;
+}
+.vs__dropdown-menu {
+    background-color: #4c4e51;
+    padding-bottom: 2px;
+    padding-top: 2px;
+}
+.vs__dropdown-option {
+    color: #acadae;
+}
+.vs__dropdown-option:hover,.vs__dropdown-option--highlight {
+    background-color: #5a6e85;
 }
 .node .title {
     color: #acadae !important;

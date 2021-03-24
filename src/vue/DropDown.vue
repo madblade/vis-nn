@@ -1,29 +1,4 @@
 <template>
-<!--    <div-->
-<!--        class="dropdown"-->
-<!--        @click="toggleRiskLevels"-->
-<!--        :class="{ expanded: isExpanded }"-->
-<!--        :style="computedStyles"-->
-<!--    >-->
-<!--        <div class="dropdown-label-container">-->
-<!--            <div class="dropdown-label">-->
-<!--        <span class="text">-->
-<!--          {{ (config && config.prefix ? config.prefix : "") + " "-->
-<!--            }}{{ config && config.placeholder ? config.placeholder : placeholder }}-->
-<!--        </span>-->
-<!--                <i class="angle-down" :class="{ toggled: isExpanded }"></i>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        <div v-expand="isExpanded" class="options expand">-->
-<!--            <div-->
-<!--                v-for="option in configOptions"-->
-<!--                class="option"-->
-<!--                @click="setCurrentSelectedOption(option);"-->
-<!--            >{{ option.value }}-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
     <v-select :options="options" @input="setCurrentSelectedOption"
               :clearable="false"
               :searchable="false"
@@ -38,54 +13,19 @@ export default {
     data() {
         return {
             sel: this.selected
-            // configOptions: [
-            //     'linear',
-            //     'relu',
-            //     'tanh',
-            //     'sigmoid'
-            // ],
         };
     },
     components: {},
     props: ["config", 'emitter', 'change', 'options', 'selected'],
     computed: {
-        computedStyles: function () {
-            console.log('style computed');
-            return [
-                {"--options-height": this.optionsHeight + "px"},
-                {"--options-height-neg": "-" + this.optionsHeight + "px"},
-                {"--option-height": this.optionHeight + "px"},
-                {"--main-el-border-radius": this.borderRadius},
-                {"--dropdown-width": this.width + "px"},
-                {"--dropdown-background-color": this.backgroundColor},
-                {"--dropdown-expanded-color": this.backgroundExpandedColor},
-                {"--dropdown-border": this.border},
-                {"--dropdown-hover-background-color": this.hoverBackgroundColor},
-                {"--dropdown-default-text-color": this.textColor}
-            ];
-        }
     },
     directives: {
         expand: {
             inserted: function (el, binding) {
                 if (binding.value !== null) {
-                    function calcHeight() {
-                        const currentState = el.getAttribute("aria-expanded");
-                        el.classList.add("u-no-transition");
-                        el.removeAttribute("aria-expanded");
-                        el.style.height = null;
-                        el.style.height = el.clientHeight + "px";
-                        el.setAttribute("aria-expanded", currentState);
-
-                        setTimeout(function () {
-                            el.classList.remove("u-no-transition");
-                        });
-                    }
 
                     el.classList.add("expand");
                     el.setAttribute("aria-expanded", binding.value ? "true" : "false");
-                    calcHeight();
-                    window.addEventListener("resize", calcHeight);
                 }
             },
             update: function (el, binding) {
@@ -105,7 +45,6 @@ export default {
         },
         setConfigData() {
             if (this.config) {
-                // this.configOptions = this.config.options;
             }
         },
     },

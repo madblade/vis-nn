@@ -57,7 +57,9 @@ class Conv2DLayerComponent extends Rete.Component
         let fControl = new NumberControl(this.editor, 'filters', 'Filters', 'number', false, 1);
         let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
         let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
-        let aControl = new DropDownControl(this.editor, 'a', 'Activation',  ['option1', 'option2']);
+        let aControl = new DropDownControl(this.editor, 'a', 'Activation',
+            ['linear', 'relu', 'tanh', 'sigmoid']
+        );
 
         node.addInput(input);
         node.addControl(fControl);
