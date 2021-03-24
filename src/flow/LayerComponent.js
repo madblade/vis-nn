@@ -23,7 +23,7 @@ class DenseLayerComponent extends Rete.Component
         let input = new Rete.Input('din', 'in', NUM_SOCKET);
         let out = new Rete.Output('dense', 'out', NUM_SOCKET);
 
-        let control = new NumberControl(this.editor, 'size', 'Units', 'number', false);
+        let control = new NumberControl(this.editor, 'size', 'Units', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['linear', 'relu', 'tanh', 'sigmoid']
         );
@@ -34,6 +34,9 @@ class DenseLayerComponent extends Rete.Component
         node.addControl(control);
         node.addControl(aControl);
         node.addOutput(out);
+
+        const color = 'rgb(85,126,19,0.8)';
+        node.data.style = `${color} !important`;
     }
 
     worker(node, inputs, outputs)
@@ -77,6 +80,9 @@ class Conv2DLayerComponent extends Rete.Component
         node.addControl(sControl);
         node.addControl(aControl);
         node.addOutput(out);
+
+        const color = 'rgb(85,126,19,0.8)';
+        node.data.style = `${color} !important`;
     }
 
     worker(node, inputs, outputs)

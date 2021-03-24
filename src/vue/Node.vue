@@ -1,6 +1,6 @@
 <template lang="pug">
     .node
-        .title {{node.name}}
+        .title(:style="'background-color:' + node.data.style") {{node.name}}
         .content
             .column(v-if='node.controls.size > 0 || node.inputs.size > 0')
                 .inputs(v-for='input in inputs()')
@@ -33,7 +33,7 @@ export default {
     mixins: [VueRender.mixin],
     components: {
         Socket
-    }
+    },
 }
 </script>
 
@@ -48,6 +48,7 @@ $group-handler-offset: -10px
 $context-menu-round: 7px
 $socket-size: 16px
 $socket-margin: 10px
+$title-background-color: var(--title-style)
 
 .node
     background-color: transparent !important
@@ -70,6 +71,7 @@ $socket-margin: 10px
     .title
         color: #acadae !important
         background-color: rgba(91, 93, 96, 0.8) !important
+        //background-color: $title-background-color !important
         text-align: center
         font-family: 'Consolas', monospace !important
         font-size: 18px
