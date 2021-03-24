@@ -23,6 +23,12 @@ class DropDownControl extends Rete.Control
         };
     }
 
+    getValue()
+    {
+        const ctx = this.props;
+        return ctx.selected;
+    }
+
     onChange(e)
     {
         console.log('Selected', e);

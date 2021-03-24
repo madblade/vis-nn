@@ -20,13 +20,19 @@ class DenseLayerComponent extends Rete.Component
 
     builder(node)
     {
-        let input = new Rete.Input('din', 'I', NUM_SOCKET);
-        let out = new Rete.Output('dense', 'O', NUM_SOCKET);
+        let input = new Rete.Input('din', 'in', NUM_SOCKET);
+        let out = new Rete.Output('dense', 'out', NUM_SOCKET);
 
         let control = new NumberControl(this.editor, 'size', 'Units', 'number', false);
+        let aControl = new DropDownControl(this.editor, 'a', 'Activation',
+            ['linear', 'relu', 'tanh', 'sigmoid']
+        );
+
+        this.unitsControl = control;
 
         node.addInput(input);
         node.addControl(control);
+        node.addControl(aControl);
         node.addOutput(out);
     }
 
@@ -35,6 +41,8 @@ class DenseLayerComponent extends Rete.Component
         outputs.size = node.data.size;
         // console.log(inputs);
         // console.log(outputs);
+
+        console.log(`dense processing with units ${this.unitsControl.getValue()}`);
     }
 }
 
@@ -51,8 +59,8 @@ class Conv2DLayerComponent extends Rete.Component
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'I', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'O', NUM_SOCKET);
+        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
+        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
 
         let fControl = new NumberControl(this.editor, 'filters', 'Filters', 'number', false, 1);
         let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
@@ -60,6 +68,8 @@ class Conv2DLayerComponent extends Rete.Component
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['linear', 'relu', 'tanh', 'sigmoid']
         );
+
+        this.aControl = aControl;
 
         node.addInput(input);
         node.addControl(fControl);
@@ -72,8 +82,7 @@ class Conv2DLayerComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         outputs.conv2d = node.data.conv2d;
-        console.log(inputs);
-        console.log(outputs);
+        console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 }
 

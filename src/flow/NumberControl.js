@@ -27,6 +27,12 @@ class NumberControl extends Rete.Control
         console.log(value);
     }
 
+    getValue()
+    {
+        const ctx = this.vueContext || this.props;
+        return ctx.value;
+    }
+
     onChange() {
         console.log('change');
     }

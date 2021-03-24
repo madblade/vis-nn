@@ -3,11 +3,11 @@ import Rete           from 'rete';
 import { NUM_SOCKET } from '../viewFlow';
 import Node           from '../vue/Node';
 
-class InputComponent extends Rete.Component
+class OutputComponent extends Rete.Component
 {
     constructor()
     {
-        super('Input');
+        super('Output');
         this.data = {
             render: 'vue',
             component: Node
@@ -16,15 +16,17 @@ class InputComponent extends Rete.Component
 
     builder(node)
     {
-        let out = new Rete.Output('in', '', NUM_SOCKET);
+        let input = new Rete.Input('out', '', NUM_SOCKET);
 
-        node.addOutput(out);
+        node.addInput(input);
     }
 
     worker(node, inputs, outputs)
     {
-        outputs.num = node.data.num;
+        // inputs.num = node.data.num;
+        console.log('sink');
+        console.log(node);
     }
 }
 
-export { InputComponent };
+export { OutputComponent };

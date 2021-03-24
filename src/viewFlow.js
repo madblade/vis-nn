@@ -1,11 +1,12 @@
 
-import Rete                        from 'rete';
-import { InputComponent }          from './flow/InputComponent';
-import ContextMenuPlugin, { Menu } from 'rete-context-menu-plugin';
-import ConnectionPlugin            from 'rete-connection-plugin';
-import VueRenderPlugin             from 'rete-vue-render-plugin';
+import Rete                                          from 'rete';
+import { InputComponent }                            from './flow/InputComponent';
+import ContextMenuPlugin, { Menu }                   from 'rete-context-menu-plugin';
+import ConnectionPlugin                              from 'rete-connection-plugin';
+import VueRenderPlugin                               from 'rete-vue-render-plugin';
 import { isMobile }                                  from './OrbitControlsZoomFixed';
 import { Conv2DLayerComponent, DenseLayerComponent } from './flow/LayerComponent';
+import { OutputComponent }                           from './flow/OutputComponent';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -54,6 +55,7 @@ function initEditor(editor)
                 case 'Input': return [];
                 case 'Dense': return ['Layers'];
                 case 'Conv2D': return ['Layers'];
+                case 'Output': return [];
             }
             return null;
         },
@@ -180,14 +182,19 @@ function initFlow()
     const inputComponent = new InputComponent();
     const denseComponent = new DenseLayerComponent(editor);
     const conv2dComponent = new Conv2DLayerComponent(editor);
+    const outputComponent = new OutputComponent();
+    const components = [
+        inputComponent,
+        denseComponent,
+        conv2dComponent,
+        outputComponent
+    ];
 
     // register
-    editor.register(inputComponent);
-    editor.register(denseComponent);
-    editor.register(conv2dComponent);
-    engine.register(inputComponent);
-    engine.register(denseComponent);
-    engine.register(conv2dComponent);
+    components.forEach(c => {
+        editor.register(c);
+        engine.register(c);
+    });
 
     // to zoom
     const { area } = editor.view;
