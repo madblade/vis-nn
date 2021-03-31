@@ -1,12 +1,12 @@
 
 import Rete                                          from 'rete';
-import { InputComponent }                            from './flow/InputComponent';
+import { InputComponent }                            from './flow/nodes/InputComponent';
 import ContextMenuPlugin, { Menu }                   from 'rete-context-menu-plugin';
 import ConnectionPlugin                              from 'rete-connection-plugin';
 import VueRenderPlugin                               from 'rete-vue-render-plugin';
-import { isMobile }                                  from './OrbitControlsZoomFixed';
-import { Conv2DLayerComponent, DenseLayerComponent } from './flow/LayerComponent';
-import { OutputComponent }                           from './flow/OutputComponent';
+import { isMobile }                                                           from './OrbitControlsZoomFixed';
+import { Conv2DLayerComponent, DenseLayerComponent, Pooling2DLayerComponent } from './flow/nodes/LayerComponent';
+import { OutputComponent }                                                    from './flow/nodes/OutputComponent';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -55,6 +55,7 @@ function initEditor(editor)
                 case 'Input': return [];
                 case 'Dense': return ['Layers'];
                 case 'Conv2D': return ['Layers'];
+                case 'Pooling': return ['Layers'];
                 case 'Output': return [];
             }
             return null;
@@ -182,10 +183,12 @@ function initFlow()
     const inputComponent = new InputComponent();
     const denseComponent = new DenseLayerComponent(editor);
     const conv2dComponent = new Conv2DLayerComponent(editor);
+    const pooling2dComponent = new Pooling2DLayerComponent(editor);
     const outputComponent = new OutputComponent();
     const components = [
         inputComponent,
         denseComponent,
+        pooling2dComponent,
         conv2dComponent,
         outputComponent
     ];

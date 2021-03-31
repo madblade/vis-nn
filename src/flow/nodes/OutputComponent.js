@@ -1,7 +1,7 @@
 
 import Rete           from 'rete';
-import { NUM_SOCKET } from '../viewFlow';
-import Node           from '../vue/Node';
+import { NUM_SOCKET } from '../../viewFlow';
+import Node           from '../../vue/Node';
 
 class OutputComponent extends Rete.Component
 {

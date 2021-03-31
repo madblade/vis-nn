@@ -1,9 +1,9 @@
 
 import Rete                from 'rete';
-import { NUM_SOCKET }      from '../viewFlow';
-import Node                from '../vue/Node';
-import { NumberControl }   from './NumberControl';
-import { DropDownControl } from './DropDownControl';
+import { NUM_SOCKET }      from '../../viewFlow';
+import Node                from '../../vue/Node';
+import { NumberControl }   from '../NumberControl';
+import { DropDownControl } from '../DropDownControl';
 
 class DenseLayerComponent extends Rete.Component
 {
@@ -92,4 +92,47 @@ class Conv2DLayerComponent extends Rete.Component
     }
 }
 
-export { DenseLayerComponent, Conv2DLayerComponent };
+class Pooling2DLayerComponent extends Rete.Component
+{
+    constructor()
+    {
+        super('Pooling');
+        this.data = {
+            render: 'vue',
+            component: Node
+        };
+    }
+
+    builder(node)
+    {
+        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
+        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+
+        let pControl = new NumberControl(this.editor, 'px', 'Pool size', 'text', false, '3,3');
+        let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
+        let tControl = new DropDownControl(this.editor, 't', 'Type',
+            ['max', 'average']
+        );
+
+        node.addInput(input);
+        node.addControl(pControl);
+        node.addControl(sControl);
+        node.addControl(tControl);
+        node.addOutput(out);
+
+        const color = 'rgb(85,126,19,0.8)';
+        node.data.style = `${color} !important`;
+    }
+
+    worker(node, inputs, outputs)
+    {
+        // outputs.conv2d = node.data.conv2d;
+        console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
+    }
+}
+
+export {
+    DenseLayerComponent,
+    Conv2DLayerComponent,
+    Pooling2DLayerComponent,
+};
