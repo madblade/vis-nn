@@ -6,9 +6,11 @@ import ConnectionPlugin                  from 'rete-connection-plugin';
 import VueRenderPlugin                               from 'rete-vue-render-plugin';
 import { isMobile }                                                           from './OrbitControlsZoomFixed';
 import {
+    AddComponent,
+    BatchNormalizationComponent,
     ConcatenateComponent,
     Conv2DLayerComponent,
-    DenseLayerComponent,
+    DenseLayerComponent, DropoutComponent, FlattenComponent,
     Pooling2DLayerComponent
 } from './flow/nodes/LayerComponent';
 import { OutputComponent }                                                    from './flow/nodes/OutputComponent';
@@ -62,6 +64,10 @@ function initEditor(editor)
                 case 'Conv2D': return ['Layers'];
                 case 'Pooling2D': return ['Layers'];
                 case 'Concatenate': return ['Operations'];
+                case 'Flatten': return ['Operations'];
+                case 'Add': return ['Operations'];
+                case 'Dropout': return ['Operations'];
+                case 'Batch Norm.': return ['Operations'];
                 case 'Output': return [];
             }
             return null;
@@ -191,6 +197,10 @@ function initFlow()
     const conv2dComponent = new Conv2DLayerComponent(editor);
     const pooling2dComponent = new Pooling2DLayerComponent(editor);
     const concatenateComponent = new ConcatenateComponent(editor);
+    const flattenComponent = new FlattenComponent(editor);
+    const addComponent = new AddComponent(editor);
+    const batchNormComponent = new BatchNormalizationComponent(editor);
+    const dropoutComponent = new DropoutComponent(editor);
     const outputComponent = new OutputComponent();
     const components = [
         inputComponent,
@@ -198,6 +208,10 @@ function initFlow()
         pooling2dComponent,
         conv2dComponent,
         concatenateComponent,
+        flattenComponent,
+        addComponent,
+        batchNormComponent,
+        dropoutComponent,
         outputComponent
     ];
 
