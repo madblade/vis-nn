@@ -96,7 +96,7 @@ class Pooling2DLayerComponent extends Rete.Component
 {
     constructor()
     {
-        super('Pooling');
+        super('Pooling2D');
         this.data = {
             render: 'vue',
             component: Node
@@ -113,6 +113,7 @@ class Pooling2DLayerComponent extends Rete.Component
         let tControl = new DropDownControl(this.editor, 't', 'Type',
             ['max', 'average']
         );
+        this.tControl = tControl;
 
         node.addInput(input);
         node.addControl(pControl);
@@ -127,7 +128,42 @@ class Pooling2DLayerComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         // outputs.conv2d = node.data.conv2d;
-        console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
+        console.log(`pooling2d processing with activation ${this.tControl.getValue()}`);
+    }
+}
+
+class ConcatenateComponent extends Rete.Component
+{
+    constructor()
+    {
+        super('Concatenate');
+        this.data = {
+            render: 'vue',
+            component: Node
+        };
+    }
+
+    builder(node)
+    {
+        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
+        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+
+        // let tControl = new DropDownControl(this.editor, 't', 'Type',
+        //     ['max', 'average']
+        // );
+
+        node.addInput(input);
+        // node.addControl(tControl);
+        node.addOutput(out);
+
+        const color = 'rgb(85,126,19,0.8)';
+        node.data.style = `${color} !important`;
+    }
+
+    worker(node, inputs, outputs)
+    {
+        // outputs.conv2d = node.data.conv2d;
+        // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 }
 
@@ -135,4 +171,5 @@ export {
     DenseLayerComponent,
     Conv2DLayerComponent,
     Pooling2DLayerComponent,
+    ConcatenateComponent,
 };

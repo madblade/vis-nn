@@ -1,11 +1,16 @@
 
 import Rete                                          from 'rete';
-import { InputComponent }                            from './flow/nodes/InputComponent';
-import ContextMenuPlugin, { Menu }                   from 'rete-context-menu-plugin';
-import ConnectionPlugin                              from 'rete-connection-plugin';
+import { InputComponent }                from './flow/nodes/InputComponent';
+import ContextMenuPlugin, { Item, Menu } from 'rete-context-menu-plugin';
+import ConnectionPlugin                  from 'rete-connection-plugin';
 import VueRenderPlugin                               from 'rete-vue-render-plugin';
 import { isMobile }                                                           from './OrbitControlsZoomFixed';
-import { Conv2DLayerComponent, DenseLayerComponent, Pooling2DLayerComponent } from './flow/nodes/LayerComponent';
+import {
+    ConcatenateComponent,
+    Conv2DLayerComponent,
+    DenseLayerComponent,
+    Pooling2DLayerComponent
+} from './flow/nodes/LayerComponent';
 import { OutputComponent }                                                    from './flow/nodes/OutputComponent';
 
 let NUM_SOCKET;
@@ -48,14 +53,15 @@ function initEditor(editor)
     editor.use(VueRenderPlugin);
     editor.use(ConnectionPlugin, { curvature: 0.4 });
     editor.use(ContextMenuPlugin, {
-        delay: 10000000,
+        delay: 100,
         allocate(component) {
             switch (component.name)
             {
                 case 'Input': return [];
                 case 'Dense': return ['Layers'];
                 case 'Conv2D': return ['Layers'];
-                case 'Pooling': return ['Layers'];
+                case 'Pooling2D': return ['Layers'];
+                case 'Concatenate': return ['Operations'];
                 case 'Output': return [];
             }
             return null;
@@ -184,12 +190,14 @@ function initFlow()
     const denseComponent = new DenseLayerComponent(editor);
     const conv2dComponent = new Conv2DLayerComponent(editor);
     const pooling2dComponent = new Pooling2DLayerComponent(editor);
+    const concatenateComponent = new ConcatenateComponent(editor);
     const outputComponent = new OutputComponent();
     const components = [
         inputComponent,
         denseComponent,
         pooling2dComponent,
         conv2dComponent,
+        concatenateComponent,
         outputComponent
     ];
 
