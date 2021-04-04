@@ -8,6 +8,7 @@ import { Conv2DLayerComponent, DenseLayerComponent, Pooling2DLayerComponent } fr
 import { OutputComponent }                                                    from './flow/nodes/OutputComponent';
 import { AddComponent, ConcatenateComponent }                                 from './flow/nodes/CombineComponent';
 import { BatchNormalizationComponent, DropoutComponent, FlattenComponent }    from './flow/nodes/TransformComponent';
+import AutoArrangePlugin                                                      from 'rete-auto-arrange-plugin';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -278,6 +279,12 @@ function initFlow()
 
         if (e.code === 'Delete') {
             editor.selected.each(n => editor.removeNode(n));
+            return;
+        }
+
+        if (e.key === 'E' && e.shiftKey)
+        {
+            editor.trigger('arrange');
         }
     });
 
@@ -285,6 +292,8 @@ function initFlow()
         mouseState.clientX = Math.floor(e.clientX);
         mouseState.clientY = Math.floor(e.clientY);
     });
+
+    editor.use(AutoArrangePlugin, { margin: {x: 50, y: 50}, depth: 100 });
 }
 
 export { initFlow, NUM_SOCKET };
