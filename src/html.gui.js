@@ -2,6 +2,7 @@
 import $ from 'jquery';
 
 const tabs = `
+<!-- Navbar text -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" id="arch-tab" data-toggle="tab" href="#tab1" role="tab"
@@ -16,30 +17,28 @@ const tabs = `
     </li>
     <li class="nav-item">
         <a class="nav-link" id="app-tab" data-toggle="tab" href="#tab3" role="tab">
-            Application
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="model-tab" data-toggle="tab" href="#tab4" role="tab">
-            Model View
+            Simulation
         </a>
     </li>
 </ul>
 
+<!-- Actual tab content -->
 <div class="tab-content" id="myTabContent">
+    <!-- Arch tab -->
     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
         Architecture
         <div id="rete">
         </div>
     </div>
+
+    <!-- Visor / training tab -->
     <div class="tab-pane fade" id="tab2" role="tabpanel">
         Training
     </div>
+
+    <!-- 3js simulator view -->
     <div class="tab-pane fade" id="tab3" role="tabpanel">
-        Application
-    </div>
-    <div class="tab-pane fade" id="tab4" role="tabpanel">
-        Model View
+        Simulation
         <div id="webgl1">
         </div>
     </div>
@@ -69,11 +68,12 @@ function initHTML(renderer, camera)
 
     // override bootstrap listeners
     const dt = $('a[data-toggle="tab"]');
+    const threeTabID = 'tab3';
     dt.on('shown.bs.tab', function(e) {
         const target = $(e.target).attr('href');
-        if (target === '#tab4')
+        if (target === `#${threeTabID}`)
         {
-            document.getElementById('tab4').style.display = 'block';
+            document.getElementById(threeTabID).style.display = 'block';
 
             // resize
             const el2 = document.getElementById('myTabContent');
@@ -82,9 +82,9 @@ function initHTML(renderer, camera)
     });
     dt.on('hide.bs.tab', function(e) {
         const target = $(e.target).attr('href');
-        if (target === '#tab4')
+        if (target === `#${threeTabID}`)
         {
-            document.getElementById('tab4').style.display = 'none';
+            document.getElementById(threeTabID).style.display = 'none';
         }
     });
 }

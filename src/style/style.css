@@ -33,13 +33,11 @@ body {
     display: block;
 }
 
-/* Blimey! Obnoxious yellow style must be overridden here in plain css */
-/* Dare lecture me about modularity. */
+/* Node */
+/* Yellow style overridden here in plain css */
 .node {
-    /*background: rgba(110, 136, 255, 0.8);*/
     font-family: 'Consolas', monospace !important;
     background-color: transparent !important;
-    /*border: 2px solid #4e58bf;*/
     border-radius: 3px 3px 0 0 !important;
     border: 1px solid transparent !important;
     cursor: pointer;
@@ -50,42 +48,45 @@ body {
     position: relative;
     user-select: none;
 }
+
 .node:hover {
     border-color: grey !important;
 }
-.node.selected {
-    /*background: transparent !important;*/
-    /*border-color: white !important;*/
-}
+
 input.vs__search {
-    /*display: none;*/
-    /*position: absolute;*/
     padding-left: 0;
     padding-right: 0;
     border-right: 0;
 }
+
 .vs__selected {
     color: #acadae;
     margin-right: 0;
     margin-left: 0;
 }
+
 .vs__open-indicator>path {
     fill: #acadae;
 }
+
 .vs__dropdown-toggle {
     border: 1px solid #5b5d60;
 }
+
 .vs__dropdown-menu {
     background-color: #4c4e51;
     padding-bottom: 2px;
     padding-top: 2px;
 }
+
 .vs__dropdown-option {
     color: #acadae;
 }
+
 .vs__dropdown-option:hover,.vs__dropdown-option--highlight {
     background-color: #5a6e85;
 }
+
 .node .title {
     color: #acadae !important;
     background-color: rgba(91, 93, 96, 0.8) !important;
@@ -95,15 +96,19 @@ input.vs__search {
     padding: 4px 8px !important;
     border-bottom: 1px solid #5b5d60 !important;
 }
+
 .node > .control, .node > .input, .node > .output {
     background-color: #4c4e51 !important;
 }
+
 .node .output {
     text-align: right;
 }
+
 .node .input {
     text-align: left;
 }
+
 .node .input-title, .node .output-title {
     color: #acadae !important;
     vertical-align: middle;
@@ -113,17 +118,20 @@ input.vs__search {
     margin: 6px;
     line-height: 24px;
 }
+
 .node .input-control {
     z-index: 1;
     width: calc(100% - 36px);
     vertical-align: middle;
     display: inline-block;
 }
+
 .node .control {
     padding: 6px 18px;
 }
 
 /* Socket customization */
+
 .socket {
     display: inline-block;
     cursor: pointer;
@@ -134,30 +142,35 @@ input.vs__search {
     margin: 6px;
     vertical-align: middle;
     background: #96b38a;
-    /*background: transparent !important;*/
     z-index: 2;
     box-sizing: border-box;
 }
+
 .socket:hover {
     border-width: 4px;
 }
+
 .socket.multiple {
     border-color: yellow;
 }
+
 .socket.output {
     margin-right: -10px !important;
 }
+
 .socket.input {
     margin-left: -10px !important;
 }
 
 /* Context menu */
+
 .search {
     color: #acadae !important;
     background-color: rgba(91, 93, 96, 0.8) !important;
     border-radius: 3px 3px 0 0 !important;
     border: 1px solid transparent !important;
 }
+
 .context-menu {
     font-family: 'Consolas', monospace !important;
     background-color: transparent !important;
@@ -168,9 +181,8 @@ input.vs__search {
     position: fixed;
     padding: 10px;
     width: 200px !important;
-    /*margin-top: -20px;*/
-    /*margin-left: -60px;*/
 }
+
 .context-menu .item, .context-menu .subitem {
     border-radius: 0 !important;
     color: #000 !important;
@@ -181,12 +193,15 @@ input.vs__search {
     width: 100%;
     position: relative;
 }
+
 .context-menu .item:hover, .context-menu .subitem:hover {
     background-color: rgba(156, 156, 156, 0.9) !important;
 }
+
 .context-menu .search {
     background-color: rgba(91, 93, 96, 0.8) !important;
 }
+
 .context-menu .item.hasSubitems:after {
     content: '►' !important;
     position: absolute;
@@ -194,12 +209,15 @@ input.vs__search {
     right: 5px;
     top: 5px;
 }
+
 .context-menu .item .subitems {
     position: absolute;
     top: 0;
     left: 100%;
     width: 120px;
 }
+
+/* Input */
 
 .number-input {
     border-radius: 4px !important;

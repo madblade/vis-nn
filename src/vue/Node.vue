@@ -57,21 +57,15 @@ $title-background-color: var(--title-style)
     cursor: pointer
     display: inline-block
     height: auto
-    //padding-bottom: 6px
     box-sizing: content-box
     box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.2)
     &:hover
-        //background: $node-color
         border-color: grey !important
-    //&.active
     &:active, &.selected
         border: 1px solid lightgrey !important
-        //background: $color-active
-        //border: 1px solid #ffd252
     .title
         color: #acadae !important
         background-color: rgba(91, 93, 96, 0.8) !important
-        //background-color: $title-background-color !important
         text-align: center
         font-family: 'Consolas', monospace !important
         font-size: 18px
@@ -108,9 +102,5 @@ $title-background-color: var(--title-style)
         color: #acadae
     .control
         width: 100%
-        //padding: $socket-margin $socket-size/2 + $socket-margin
         padding: socket-margin $socket-size/2 + $socket-margin
-        //.number-input
-        //    border-radius: 3px
-        //    background-color: transparent !important
 </style>
