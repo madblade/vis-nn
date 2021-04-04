@@ -277,7 +277,7 @@ function initFlow()
             return;
         }
 
-        if (e.code === 'Delete') {
+        if (e.code === 'Delete' || e.key === 'x') {
             editor.selected.each(n => editor.removeNode(n));
             return;
         }
