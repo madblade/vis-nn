@@ -26,8 +26,20 @@ const tabs = `
 <div class="tab-content" id="myTabContent">
     <!-- Arch tab -->
     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
-        Architecture
-        <div id="rete">
+        <!-- Architecture -->
+        <div class="container-fluid d-flex h-100 flex-column" style="padding: 0">
+            <div class="row">
+                <div class="col-12">
+                Title
+                </div>
+            </div>
+            <div class="row col-12 d-flex flex-fill">
+                <div id="rete" class="col-8">
+                </div>
+                <div id="panel-code" class="col-4">
+                    Title 2
+                </div>
+            </div>
         </div>
     </div>
 
