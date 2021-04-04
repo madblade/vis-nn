@@ -44,6 +44,11 @@ const eventHandlers = {
     }
 };
 
+const mouseState = {
+    clientX: 0,
+    clientY: 0,
+};
+
 function initEditor(editor)
 {
     editor.use(VueRenderPlugin);
@@ -255,6 +260,30 @@ function initFlow()
     editor.fromJSON(data).then(() => {
         editor.view.resize();
         compile();
+    });
+
+    editor.on('keydown', e => {
+        if (e.key === 'A' && e.shiftKey)
+        {
+            let rect = editor.view.container.getBoundingClientRect();
+            const cx = mouseState.clientX || rect.left + rect.width / 2;
+            const cy = mouseState.clientY || rect.top + rect.height / 2;
+            let event = new MouseEvent('contextmenu', {
+                clientX: cx,
+                clientY: cy
+            });
+            editor.trigger('contextmenu', { e: event, view: editor.view });
+            return;
+        }
+
+        if (e.code === 'Delete') {
+            editor.selected.each(n => editor.removeNode(n));
+        }
+    });
+
+    document.addEventListener('mousemove', e => {
+        mouseState.clientX = Math.floor(e.clientX);
+        mouseState.clientY = Math.floor(e.clientY);
     });
 }
 
