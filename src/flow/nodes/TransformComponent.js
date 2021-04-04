@@ -1,3 +1,5 @@
+
+import * as tf             from '@tensorflow/tfjs';
 import Rete                from 'rete';
 import Node                from '../../vue/Node';
 import { NUM_SOCKET }      from '../../viewFlow';
@@ -32,6 +34,18 @@ class FlattenComponent extends Rete.Component
         // outputs.conv2d = node.data.conv2d;
         // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+    }
+
+    generatePythonLine()
+    {
+        return 'Flatten()';
+    }
 }
 
 class DropoutComponent extends Rete.Component
@@ -43,6 +57,7 @@ class DropoutComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        this.tfjsConstructor = tf.layers.dropout;
     }
 
     builder(node)
@@ -65,6 +80,19 @@ class DropoutComponent extends Rete.Component
         // outputs.conv2d = node.data.conv2d;
         // console.log(`add processing with activation ${this.aControl.getValue()}`);
     }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+    }
+
+    generatePythonLine()
+    {
+        const parameters = this.parameters;
+        return `Dropout(rate=${parameters.rate})`;
+    }
 }
 
 class BatchNormalizationComponent extends Rete.Component
@@ -76,6 +104,7 @@ class BatchNormalizationComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        this.tfjsConstructor = tf.layers.batchNormalization;
     }
 
     builder(node)
@@ -85,7 +114,7 @@ class BatchNormalizationComponent extends Rete.Component
 
         let mControl = new NumberControl(this.editor, 'r', 'Momentum', 'number', false, 0.99);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
-            ['linear', 'relu', 'tanh', 'sigmoid']
+            ['linear', 'relu']
         );
         this.aControl = aControl;
 
@@ -102,6 +131,25 @@ class BatchNormalizationComponent extends Rete.Component
     {
         // outputs.conv2d = node.data.conv2d;
         console.log(`normalize processing with activation ${this.aControl.getValue()}`);
+    }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        const activation = this.activation;
+        if (activation !== 'linear')
+        {
+            // Only reLU supported for batch normalization
+            this.tfjsLayer = tf.layers.reLU().apply(this.tfjsLayer);
+        }
+    }
+
+    generatePythonLine()
+    {
+        const parameters = this.parameters;
+        return `BatchNormalization(momentum=${parameters.momentum})`;
     }
 }
 

@@ -1,4 +1,5 @@
 
+import * as tf             from '@tensorflow/tfjs';
 import Rete                from 'rete';
 import { NUM_SOCKET }      from '../../viewFlow';
 import Node                from '../../vue/Node';
@@ -10,12 +11,12 @@ class DenseLayerComponent extends Rete.Component
     constructor(editor)
     {
         super('Dense');
-        // this.component = Node;
+        this.editor = editor;
         this.data = {
             render: 'vue',
             component: Node
         };
-        this.editor = editor;
+        this.tfjsConstructor = tf.layers.dense;
     }
 
     builder(node)
@@ -42,10 +43,23 @@ class DenseLayerComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         outputs.size = node.data.size;
-        // console.log(inputs);
-        // console.log(outputs);
 
         console.log(`dense processing with units ${this.unitsControl.getValue()}`);
+    }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+    }
+
+    generatePythonLine()
+    {
+        const parameters = this.parameters;
+        const activation = this.activation;
+        const activationText = activation === null ? '' : `, activation='${activation}'`;
+        return `Dense(${parameters.units}${activationText})`;
     }
 }
 
@@ -58,6 +72,7 @@ class Conv2DLayerComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        this.tfjsConstructor = tf.layers.conv2d;
     }
 
     builder(node)
@@ -90,6 +105,25 @@ class Conv2DLayerComponent extends Rete.Component
         outputs.conv2d = node.data.conv2d;
         console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
+
+    generateTFJSLayer()
+    {
+        // TODO set from params
+        const parameters = this.parameters;
+        // TODO set from parent
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+    }
+
+    generatePythonLine()
+    {
+        // TODO generate parameters
+        const parameters = this.parameters;
+        const activation = this.activation;
+        const activationText = activation === 'linear' ? '' : `, activation='${activation}'`;
+        return `Conv2D(${parameters.filters}, (${parameters.kernelSize}),
+            strides=(${parameters.strides})${activationText}, padding='same')`;
+    }
 }
 
 class Pooling2DLayerComponent extends Rete.Component
@@ -101,6 +135,9 @@ class Pooling2DLayerComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        // TODO distinction
+        this.tfjsConstructor = tf.layers.maxPooling2d;
+        this.tfjsConstructor = tf.layers.averagePooling2d;
     }
 
     builder(node)
@@ -113,6 +150,7 @@ class Pooling2DLayerComponent extends Rete.Component
         let tControl = new DropDownControl(this.editor, 't', 'Type',
             ['max', 'average']
         );
+
         this.tControl = tControl;
 
         node.addInput(input);
@@ -129,6 +167,19 @@ class Pooling2DLayerComponent extends Rete.Component
     {
         // outputs.conv2d = node.data.conv2d;
         console.log(`pooling2d processing with activation ${this.tControl.getValue()}`);
+    }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parent = this.parent;
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+    }
+
+    generatePythonLine()
+    {
+        const parameters = this.parameters;
+        return `MaxPooling2D(pool_size=(${parameters.poolSize}), strides=(${parameters.strides}))`;
     }
 }
 

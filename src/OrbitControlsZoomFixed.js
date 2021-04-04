@@ -684,7 +684,7 @@ var OrbitControls = function(object, domElement) {
                 onMouseDown(event);
                 break;
 
-			// TODO touch
+			// XXX touch
         }
     }
 
@@ -697,7 +697,7 @@ var OrbitControls = function(object, domElement) {
                 onMouseMove(event);
                 break;
 
-			// TODO touch
+			// XXX touch
         }
     }
 
@@ -708,7 +708,7 @@ var OrbitControls = function(object, domElement) {
                 onMouseUp(event);
                 break;
 
-			// TODO touch
+			// XXX touch
         }
     }
 

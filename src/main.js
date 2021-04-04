@@ -24,12 +24,9 @@ function init()
     initFlow();
 
     // TODO
-    // 1. dense (prediction from 2D car data)
-    // 2. cnn (mnist)
-    // 3. resnet (mnist)
-    // 3. rnn (music generation)
-    // 4. gan (mnist)
-    // 5. rl (pong or 2D fight)
+    // 1. 2D car data
+    // 2. mnist (dense, cnn, resnet)
+    // 3. rl (simulator)
 }
 
 init();

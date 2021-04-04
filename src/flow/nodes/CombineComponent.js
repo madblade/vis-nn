@@ -1,3 +1,5 @@
+
+import * as tf             from '@tensorflow/tfjs';
 import Rete                from 'rete';
 import Node                from '../../vue/Node';
 import { NUM_SOCKET }      from '../../viewFlow';
@@ -12,6 +14,7 @@ class ConcatenateComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        this.tfjsContstructor = tf.layers.concatenate;
     }
 
     builder(node)
@@ -20,13 +23,8 @@ class ConcatenateComponent extends Rete.Component
         let input2 = new Rete.Input('cin2', 'in', NUM_SOCKET);
         let out = new Rete.Output('conv', 'out', NUM_SOCKET);
 
-        // let tControl = new DropDownControl(this.editor, 't', 'Type',
-        //     ['max', 'average']
-        // );
-
         node.addInput(input1);
         node.addInput(input2);
-        // node.addControl(tControl);
         node.addOutput(out);
 
         const color = 'rgb(148,132,55)';
@@ -37,6 +35,22 @@ class ConcatenateComponent extends Rete.Component
     {
         // outputs.conv2d = node.data.conv2d;
         // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
+    }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parents = [];
+        for (const parent of this.parents)
+        {
+            parents.push(parent.tfjsLayer);
+        }
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parents);
+    }
+
+    generatePythonLine()
+    {
+        return 'Concatenate()';
     }
 }
 
@@ -49,6 +63,7 @@ class AddComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
+        this.tfjsConstructor = tf.layers.add;
     }
 
     builder(node)
@@ -60,6 +75,7 @@ class AddComponent extends Rete.Component
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['linear', 'relu', 'tanh', 'sigmoid']
         );
+
         this.aControl = aControl;
 
         node.addInput(input1);
@@ -75,6 +91,22 @@ class AddComponent extends Rete.Component
     {
         // outputs.conv2d = node.data.conv2d;
         console.log(`add processing with activation ${this.aControl.getValue()}`);
+    }
+
+    generateTFJSLayer()
+    {
+        const parameters = this.parameters;
+        const parents = [];
+        for (const parent of this.parents)
+        {
+            parents.push(parent.tfjsLayer);
+        }
+        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parents);
+    }
+
+    generatePythonLine()
+    {
+        return 'Add()';
     }
 }
 
