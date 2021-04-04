@@ -1,19 +1,13 @@
-
-import Rete                                          from 'rete';
-import { InputComponent }                from './flow/nodes/InputComponent';
-import ContextMenuPlugin, { Item, Menu } from 'rete-context-menu-plugin';
-import ConnectionPlugin                  from 'rete-connection-plugin';
-import VueRenderPlugin                               from 'rete-vue-render-plugin';
+import Rete                                                                   from 'rete';
+import { InputComponent }                                                     from './flow/nodes/InputComponent';
+import ContextMenuPlugin, { Menu }                                            from 'rete-context-menu-plugin';
+import ConnectionPlugin                                                       from 'rete-connection-plugin';
+import VueRenderPlugin                                                        from 'rete-vue-render-plugin';
 import { isMobile }                                                           from './OrbitControlsZoomFixed';
-import {
-    AddComponent,
-    BatchNormalizationComponent,
-    ConcatenateComponent,
-    Conv2DLayerComponent,
-    DenseLayerComponent, DropoutComponent, FlattenComponent,
-    Pooling2DLayerComponent
-} from './flow/nodes/LayerComponent';
+import { Conv2DLayerComponent, DenseLayerComponent, Pooling2DLayerComponent } from './flow/nodes/LayerComponent';
 import { OutputComponent }                                                    from './flow/nodes/OutputComponent';
+import { AddComponent, ConcatenateComponent }                                 from './flow/nodes/CombineComponent';
+import { BatchNormalizationComponent, DropoutComponent, FlattenComponent }    from './flow/nodes/TransformComponent';
 
 let NUM_SOCKET;
 // let ACTION_SOCKET;
@@ -60,14 +54,18 @@ function initEditor(editor)
             switch (component.name)
             {
                 case 'Input': return [];
+
                 case 'Dense': return ['Layers'];
                 case 'Conv2D': return ['Layers'];
                 case 'Pooling2D': return ['Layers'];
-                case 'Concatenate': return ['Operations'];
-                case 'Flatten': return ['Operations'];
-                case 'Add': return ['Operations'];
-                case 'Dropout': return ['Operations'];
-                case 'Batch Norm.': return ['Operations'];
+
+                case 'Concatenate': return ['Combine'];
+                case 'Add': return ['Combine'];
+
+                case 'Flatten': return ['Transform'];
+                case 'Dropout': return ['Transform'];
+                case 'Batch Norm.': return ['Transform'];
+
                 case 'Output': return [];
             }
             return null;
@@ -204,14 +202,18 @@ function initFlow()
     const outputComponent = new OutputComponent();
     const components = [
         inputComponent,
+
+        conv2dComponent,
         denseComponent,
         pooling2dComponent,
-        conv2dComponent,
-        concatenateComponent,
+
         flattenComponent,
-        addComponent,
         batchNormComponent,
         dropoutComponent,
+
+        addComponent,
+        concatenateComponent,
+
         outputComponent
     ];
 

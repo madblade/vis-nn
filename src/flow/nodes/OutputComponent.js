@@ -18,7 +18,7 @@ class OutputComponent extends Rete.Component
     {
         let input = new Rete.Input('out', '', NUM_SOCKET);
 
-        const color = 'rgb(97, 18, 140, 0.8)';
+        const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
 
         node.addInput(input);
