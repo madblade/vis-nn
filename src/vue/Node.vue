@@ -1,5 +1,5 @@
 <template lang="pug">
-    .node
+    .node(:class="[selected()]")
         .title(:style="'background-color:' + node.data.style") {{node.name}}
         .content
             .column(v-if='node.controls.size > 0 || node.inputs.size > 0')
@@ -64,8 +64,8 @@ $title-background-color: var(--title-style)
         //background: $node-color
         border-color: grey !important
     //&.active
-    //&:active, &.selected
-        //border: 1px solid red !important
+    &:active, &.selected
+        border: 1px solid lightgrey !important
         //background: $color-active
         //border: 1px solid #ffd252
     .title

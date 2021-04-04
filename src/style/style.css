@@ -55,7 +55,7 @@ body {
 }
 .node.selected {
     /*background: transparent !important;*/
-    border-color: white !important;
+    /*border-color: white !important;*/
 }
 input.vs__search {
     /*display: none;*/
