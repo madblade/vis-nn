@@ -15,7 +15,7 @@ module.exports = function(env) {
                 template: './src/index.html',
                 favicon: './img/favicon.ico',
                 baseUrl: env.development ?
-                    '/' : 'https://madblade.github.io/nn-vis/'
+                    '/' : 'https://madblade.github.io/vis-nn/'
             }),
             new webpack.HotModuleReplacementPlugin(),
             new VueLoaderPlugin()
