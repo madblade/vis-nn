@@ -47,7 +47,7 @@ const tabs = `
 
     <!-- Visor / training tab -->
     <div class="tab-pane fade" id="tab2" role="tabpanel">
-        Training
+        Work in progress…
     </div>
 
     <!-- 3js simulator view -->

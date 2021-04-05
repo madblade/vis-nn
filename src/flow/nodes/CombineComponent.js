@@ -36,9 +36,16 @@ class ConcatenateComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents1 = inputs.parent1;
+        const parents2 = inputs.parent2;
+        if (!parents1 || parents1.length < 1) return;
+        if (!parents2 || parents2.length < 1) return;
+        const parent1 = parents1[0];
+        const parent2 = parents1[0];
+        if (!parent1.dataset) return;
+        if (!parent2.dataset) return;
+
         outputs.child = this;
-        // outputs.conv2d = node.data.conv2d;
-        // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -96,9 +103,16 @@ class AddComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        // outputs.conv2d = node.data.conv2d;
+        const parents1 = inputs.parent1;
+        const parents2 = inputs.parent2;
+        if (!parents1 || parents1.length < 1) return;
+        if (!parents2 || parents2.length < 1) return;
+        const parent1 = parents1[0];
+        const parent2 = parents1[0];
+        if (!parent1.dataset) return;
+        if (!parent2.dataset) return;
+
         outputs.child = this;
-        // console.log(`add processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()

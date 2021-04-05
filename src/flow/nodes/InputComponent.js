@@ -69,7 +69,6 @@ class InputComponent extends Rete.Component
         this.pythonLines = [ // topologically sorted (internally by rete’s engine)
             [node.id, pythonLine]
         ];
-        console.log(this.pythonLines);
 
         outputs.child = this;
     }

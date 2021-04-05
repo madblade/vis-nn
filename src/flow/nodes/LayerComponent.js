@@ -26,16 +26,16 @@ class DenseLayerComponent extends Rete.Component
         let input = new Rete.Input('parent', 'in', NUM_SOCKET);
         let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
-        let control = new NumberControl(this.editor, 'size', 'Units', 'number', false, 10);
+        let uControl = new NumberControl(this.editor, 'size', 'Units', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['relu', 'tanh', 'sigmoid', 'linear']
         );
 
-        this.unitsControl = control;
-
         node.addInput(input);
-        node.addControl(control);
+        node.addControl(uControl);
+        this.uControl = uControl;
         node.addControl(aControl);
+        this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgba(140, 80, 18, 0.8)';
@@ -44,8 +44,21 @@ class DenseLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents = inputs.parent;
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
+
         outputs.child = this;
-        // console.log(`dense processing with units ${this.unitsControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -57,10 +70,15 @@ class DenseLayerComponent extends Rete.Component
 
     generatePythonLine()
     {
-        const parameters = this.parameters;
-        const activation = this.activation;
-        const activationText = activation === null ? '' : `, activation='${activation}'`;
-        return `Dense(${parameters.units}${activationText})`;
+        const activation = this.aControl.getValue();
+        let units = this.uControl.getValue();
+        if (units < 1)
+        {
+            console.warn('Invalid unit number.');
+            units = 1;
+        }
+        const activationText = activation === 'linear' ? '' : `, activation='${activation}'`;
+        return `Dense(${units}${activationText})`;
     }
 }
 
@@ -110,7 +128,6 @@ class Conv2DLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        outputs.conv2d = node.data.conv2d;
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
@@ -132,8 +149,8 @@ class Conv2DLayerComponent extends Rete.Component
     generateTFJSLayer()
     {
         // TODO set from params
-        const parameters = this.parameters;
         // TODO set from parent
+        const parameters = this.parameters;
         const parent = this.parent;
         this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
@@ -175,7 +192,7 @@ class Pooling2DLayerComponent extends Rete.Component
             component: Node
         };
         this.parent = null;
-        // TODO distinction
+        // TODO distinction in tfjs
         this.tfjsConstructor = tf.layers.maxPooling2d;
         this.tfjsConstructor = tf.layers.averagePooling2d;
         this.editor = editor;
@@ -193,12 +210,13 @@ class Pooling2DLayerComponent extends Rete.Component
             ['max', 'average']
         );
 
-        this.tControl = tControl;
-
         node.addInput(input);
         node.addControl(pControl);
+        this.pControl = pControl;
         node.addControl(sControl);
+        this.sControl = sControl;
         node.addControl(tControl);
+        this.tControl = tControl;
         node.addOutput(out);
 
         const color = 'rgba(140, 80, 18, 0.8)';
@@ -207,9 +225,21 @@ class Pooling2DLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents = inputs.parent;
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
+
         outputs.child = this;
-        // outputs.conv2d = node.data.conv2d;
-        // console.log(`pooling2d processing with activation ${this.tControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -221,8 +251,22 @@ class Pooling2DLayerComponent extends Rete.Component
 
     generatePythonLine()
     {
-        const parameters = this.parameters;
-        return `MaxPooling2D(pool_size=(${parameters.poolSize}), strides=(${parameters.strides}))`;
+        let poolSize = this.pControl.getValue();
+        if (typeof poolSize !== 'string' || poolSize.split(',').length !== 2)
+        {
+            console.warn('Invalid pool size.');
+            poolSize = '3,3';
+        }
+        let stride = this.sControl.getValue();
+        if (typeof stride !== 'string' || stride.split(',').length !== 2)
+        {
+            console.warn('Invalid pool size.');
+            stride = '1,1';
+        }
+        let prefix = this.tControl.getValue();
+        prefix = prefix === 'max' ? 'Max' : prefix === 'average' ? 'Average' : 'Max';
+
+        return `${prefix}Pooling2D(pool_size=(${poolSize}), strides=(${stride}))`;
     }
 }
 

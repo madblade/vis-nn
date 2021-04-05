@@ -33,9 +33,12 @@ class FlattenComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents = inputs.parent;
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
         outputs.child = this;
-        // outputs.conv2d = node.data.conv2d;
-        // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -83,9 +86,12 @@ class DropoutComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents = inputs.parent;
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
         outputs.child = this;
-        // outputs.conv2d = node.data.conv2d;
-        // console.log(`add processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -139,8 +145,12 @@ class BatchNormalizationComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        const parents = inputs.parent;
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
         outputs.child = this;
-        // console.log(`normalize processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
