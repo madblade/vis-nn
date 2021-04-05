@@ -8,8 +8,6 @@ import { DropDownControl } from '../DropDownControl';
 
 function generatePythonCode(dataset, model, modelCode)
 {
-
-
     const code = `
 import tensorflow as tf
 from tf.keras.datasets import ${dataset.pythonName}
@@ -103,6 +101,10 @@ class OutputComponent extends Rete.Component
     {
         // inputs.num = node.data.num;
         console.log('last call');
+
+        const codeElement = document.getElementById('code-container');
+        codeElement.innerHTML = '<pre><code>import tf from tensorflow</code></pre>';
+        window.hljs.highlightAll();
     }
 
     generateTFJSLayer()

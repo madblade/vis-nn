@@ -39,7 +39,7 @@ const tabs = `
                 <div id="panel-code" class="col-4">
                     <p id="panel-code-title">Python code</p>
                     <div id="code-container" class="flex-fill">
-                    <pre><code>import tensorflow as tf</code></pre>
+                    <pre><code class="language-python">import tensorflow as tf</code></pre>
                     </div>
                 </div>
             </div>

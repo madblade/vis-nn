@@ -15,6 +15,11 @@ import {
 }                   from './view3d';
 import { initFlow } from './viewFlow';
 
+import hljs         from 'highlight.js/lib/core';
+import python       from 'highlight.js/lib/languages/python';
+hljs.registerLanguage('python', python);
+window.hljs = hljs;
+
 function init()
 {
     const renderer = initRenderer();
