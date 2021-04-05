@@ -65,6 +65,29 @@ body {
     margin-bottom: 20px;
 }
 
+#template-selector {
+    padding-left: 20px;
+}
+
+.btn-secondary:not(:disabled):not(.disabled).active,
+.btn-secondary:not(:disabled):not(.disabled):active,
+.show>.btn-secondary.dropdown-toggle,
+.btn-secondary.focus, .btn-secondary:focus, .btn-secondary
+{
+    color: #acadae;
+    background-color: rgb(91, 91, 91);
+    border-color: grey;
+}
+
+.dropdown-menu.show
+{
+    background-color: rgb(57, 57, 57);
+}
+.dropdown-item
+{
+    color: #acadae;
+}
+
 .nav-tabs { border-color: grey; }
 
 .nav-tabs .nav-link.active {

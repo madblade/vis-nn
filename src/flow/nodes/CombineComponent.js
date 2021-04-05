@@ -42,8 +42,8 @@ class ConcatenateComponent extends Rete.Component
         if (!parents2 || parents2.length < 1) return;
         const parent1 = parents1[0];
         const parent2 = parents2[0];
-        if (!parent1.dataset) return;
-        if (!parent2.dataset) return;
+        if (!parent1 || !parent1.dataset) return;
+        if (!parent2 || !parent2.dataset) return;
 
         this.dataset = parent1.dataset;
         const pythonLines1 = parent1.pythonLines;
@@ -129,12 +129,14 @@ class AddComponent extends Rete.Component
         if (!parents2 || parents2.length < 1) return;
         const parent1 = parents1[0];
         const parent2 = parents2[0];
-        if (!parent1.dataset) return;
-        if (!parent2.dataset) return;
+        if (!parent1 || !parent1.dataset) return;
+        if (!parent2 || !parent2.dataset) return;
 
         this.dataset = parent1.dataset;
         const pythonLines1 = parent1.pythonLines;
         const pythonLines2 = parent2.pythonLines;
+        console.log(pythonLines1);
+        console.log(pythonLines2);
         const parent1Id = pythonLines1[pythonLines1.length - 1][0];
         const parent2Id = pythonLines2[pythonLines2.length - 1][0];
         const pythonLine = `l${node.id} = ${this.generatePythonLine()}([l${parent1Id},l${parent2Id}])`;

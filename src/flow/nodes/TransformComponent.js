@@ -4,7 +4,7 @@ import Rete                from 'rete';
 import Node                from '../../vue/Node';
 import { NUM_SOCKET }      from '../../viewFlow';
 import { NumberControl }   from '../NumberControl';
-import { DropDownControl } from '../DropDownControl';
+// import { DropDownControl } from '../DropDownControl';
 
 class FlattenComponent extends Rete.Component
 {
@@ -36,7 +36,7 @@ class FlattenComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         this.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
@@ -99,7 +99,7 @@ class DropoutComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         this.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
@@ -173,7 +173,7 @@ class BatchNormalizationComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         this.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;

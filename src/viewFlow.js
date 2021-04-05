@@ -31,6 +31,70 @@ const data = {
     groups: {}
 };
 
+const basicExample = {
+    id:'demo@0.1.0', nodes:{1:{id:1, data:{num:2, style:'rgb(85,126,19,0.8) !important'},
+        inputs:{}, outputs:{child:{connections:[{node:4, input:'parent', data:{}}]}}, position:[0, -84], name:'Input'},
+    2:{id:2, data:{style:'rgb(85,126,19,0.8) !important', size:10, lr:0.01, e:6, bs:64},
+        inputs:{parent:{connections:[{node:6, output:'child', data:{}}]}}, outputs:{}, position:[1144, -224], name:'Output'},
+    4:{id:4, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+        inputs:{parent:{connections:[{node:1, output:'child', data:{}}]}}, outputs:{child:{connections:[{node:5, input:'parent', data:{}}]}},
+        position:[276, -155], name:'Conv2D'}, 5:{id:5, data:{style:'rgb(97, 18, 140, 0.8) !important'},
+        inputs:{parent:{connections:[{node:4, output:'child', data:{}}]}}, outputs:{child:{connections:[{node:6, input:'parent', data:{}}]}},
+        position:[595, -62], name:'Flatten'}, 6:{id:6, data:{style:'rgba(140, 80, 18, 0.8) !important', size:32},
+        inputs:{parent:{connections:[{node:5, output:'child', data:{}}]}},
+        outputs:{child:{connections:[{node:2, input:'parent', data:{}}]}}, position:[825, -109], name:'Dense'}}};
+
+const resNetExample = {id:'demo@0.1.0', nodes:{1:{id:1, data:{num:2, style:'rgb(85,126,19,0.8) !important'},
+    inputs:{}, outputs:{child:{connections:[{node:4, input:'parent', data:{}}]}}, position:[296.09421062631225, -52.59606856993658],
+    name:'Input'}, 2:{id:2, data:{style:'rgb(85,126,19,0.8) !important', size:10, lr:0.01, e:6, bs:64},
+    inputs:{parent:{connections:[{node:9, output:'child', data:{}}]}}, outputs:{}, position:[2507.5077278842323, -173.35341887665305],
+    name:'Output'}, 4:{id:4, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+    inputs:{parent:{connections:[{node:1, output:'child', data:{}}]}}, outputs:{child:{connections:[{node:10, input:'parent', data:{}},
+        {node:14, input:'parent2', data:{}}]}}, position:[572.0942106263122, -123.59606856993658],
+    name:'Conv2D'}, 5:{id:5, data:{style:'rgb(97, 18, 140, 0.8) !important'},
+    inputs:{parent:{connections:[{node:15, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:6, input:'parent', data:{}}]}},
+    position:[1694.463489480539, -23.176465261880658], name:'Flatten'},
+6:{id:6, data:{style:'rgba(140, 80, 18, 0.8) !important', size:32},
+    inputs:{parent:{connections:[{node:5, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:9, input:'parent', data:{}}]}},
+    position:[1921.5077278842323, -58.35341887665306], name:'Dense'},
+9:{id:9, data:{style:'rgb(97, 18, 140, 0.8) !important', r:0.5},
+    inputs:{parent:{connections:[{node:6, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:2, input:'parent', data:{}}]}},
+    position:[2240.5077278842323, -34.35341887665306], name:'Dropout'},
+10:{id:10, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+    inputs:{parent:{connections:[{node:4, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:11, input:'parent', data:{}}]}},
+    position:[585.71162275878, -478.4736551398337], name:'Conv2D'},
+11:{id:11, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+    inputs:{parent:{connections:[{node:10, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:14, input:'parent1', data:{}}]}},
+    position:[895.8443413727845, -475.51783223581424], name:'Conv2D'},
+12:{id:12, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+    inputs:{parent:{connections:[{node:14, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:13, input:'parent', data:{}}]}},
+    position:[1035.745756766094, -114.34508916717883], name:'Conv2D'},
+13:{id:13, data:{style:'rgba(140, 80, 18, 0.8) !important', filters:16, kx:'3,3', sx:'1,1'},
+    inputs:{parent:{connections:[{node:12, output:'child', data:{}}]}},
+    outputs:{child:{connections:[{node:15, input:'parent2', data:{}}]}},
+    position:[1337.3966845773396, -113.32776779456647], name:'Conv2D'},
+14:{id:14, data:{style:'rgb(148,132,55) !important'}, inputs:{parent1:{connections:[{node:11, output:'child', data:{}}]},
+    parent2:{connections:[{node:4, output:'child', data:{}}]}},
+outputs:{child:{connections:[{node:12, input:'parent', data:{}},
+    {node:15, input:'parent1', data:{}}]}}, position:[1206.1633357779972, -353.8574232279738], name:'Add'},
+15:{id:15, data:{style:'rgb(148,132,55) !important'}, inputs:{parent1:{connections:[{node:14, output:'child', data:{}}]},
+    parent2:{connections:[{node:13, output:'child', data:{}}]}},
+outputs:{child:{connections:[{node:5, input:'parent', data:{}}]}},
+position:[1681.654383030566, -229.21332484721245], name:'Add'}}};
+
+const blankExample = {
+    id:'demo@0.1.0', nodes:{1:{id:1, data:{num:2, style:'rgb(85,126,19,0.8) !important'},
+        inputs:{}, outputs:{child:{connections:[]}}, position:[20, 50], name:'Input'},
+    2:{id:2, data:{style:'rgb(85,126,19,0.8) !important', size:10, lr:0.01, e:6, bs:64},
+        inputs:{parent:{connections:[]}}, outputs:{}, position:[891.784273691035, 48.390405204978094],
+        name:'Output'}}};
+
 const eventHandlers = {
     list: [],
     clear() {
@@ -291,6 +355,13 @@ function initFlow()
         if (e.key === 'E' && e.shiftKey)
         {
             editor.trigger('arrange');
+            return;
+        }
+
+        if (e.key === 'S' && e.shiftKey)
+        {
+            const json = editor.toJSON();
+            console.log(JSON.stringify(json));
         }
     });
 
@@ -314,6 +385,26 @@ function initFlow()
 
     editor.on('process', () => {
         setTimeout(() => compile(), 100);
+    });
+
+    // listeners dropdown
+    document.getElementById('basic').addEventListener('click', () => {
+        editor.fromJSON(basicExample).then(() => {
+            editor.view.resize();
+            compile();
+        });
+    });
+    document.getElementById('resnet').addEventListener('click', () => {
+        editor.fromJSON(resNetExample).then(() => {
+            editor.view.resize();
+            compile();
+        });
+    });
+    document.getElementById('blank').addEventListener('click', () => {
+        editor.fromJSON(blankExample).then(() => {
+            editor.view.resize();
+            compile();
+        });
     });
 }
 

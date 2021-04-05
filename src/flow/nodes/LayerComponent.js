@@ -47,7 +47,7 @@ class DenseLayerComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         this.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
@@ -131,7 +131,7 @@ class Conv2DLayerComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         // here the node is connected to the input
         this.dataset = parent.dataset;
@@ -142,6 +142,8 @@ class Conv2DLayerComponent extends Rete.Component
         for (let l = 0; l < pythonLines.length; ++l)
             this.pythonLines.push(pythonLines[l]);
         this.pythonLines.push([node.id, pythonLine]);
+        console.log(node.id);
+        console.log(this);
 
         outputs.child = this;
     }
@@ -228,7 +230,7 @@ class Pooling2DLayerComponent extends Rete.Component
         const parents = inputs.parent;
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
-        if (!parent.dataset) return;
+        if (!parent || !parent.dataset) return;
 
         this.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;

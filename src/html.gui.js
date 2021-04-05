@@ -30,7 +30,19 @@ const tabs = `
         <div class="container-fluid d-flex h-100 flex-column" style="padding: 0">
             <div class="row">
                 <div id="architecture-header" class="col-12">
-                Classification / regression
+                    Classification / regression
+                    <span id="template-selector" class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle"
+                                type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Templates
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" id="basic">Basic</a>
+                            <a class="dropdown-item" id="resnet">ResNet</a>
+                            <a class="dropdown-item" id="blank">Blank</a>
+                        </div>
+                    </span>
                 </div>
             </div>
             <div class="row col-12 d-flex flex-fill">

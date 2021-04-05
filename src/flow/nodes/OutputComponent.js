@@ -82,7 +82,7 @@ class OutputComponent extends Rete.Component
     builder(node)
     {
         let input = new Rete.Input('parent', '', NUM_SOCKET);
-        let dControl = new NumberControl(this.editor, 'size', 'Dimension', 'number', false, 10);
+        let dControl = new NumberControl(this.editor, 'size', 'Dense Units', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['softmax', 'sigmoid', 'linear', 'relu', 'tanh']
         );
