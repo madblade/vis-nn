@@ -29,15 +29,18 @@ const tabs = `
         <!-- Architecture -->
         <div class="container-fluid d-flex h-100 flex-column" style="padding: 0">
             <div class="row">
-                <div class="col-12">
-                Title
+                <div id="architecture-header" class="col-12">
+                Classification / regression
                 </div>
             </div>
             <div class="row col-12 d-flex flex-fill">
                 <div id="rete" class="col-8">
                 </div>
                 <div id="panel-code" class="col-4">
-                    Title 2
+                    <p id="panel-code-title">Python code</p>
+                    <div id="code-container" class="flex-fill">
+                    <pre><code>import tensorflow as tf</code></pre>
+                    </div>
                 </div>
             </div>
         </div>

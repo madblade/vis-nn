@@ -4,6 +4,9 @@
 
 body {
     overflow: hidden;
+    font-family: 'Consolas', monospace;
+    background-color: rgb(57, 57, 57);
+    color: #acadae;
 }
 
 #main {
@@ -32,6 +35,27 @@ body {
     flex: 1;
     display: block;
 }
+
+/* Nav & tabs */
+#architecture-header {
+    border: 1px solid grey;
+    padding: 5px 30px;
+}
+
+#panel-code {
+    border-left: 1px solid grey;
+}
+
+#panel-code-title {
+    padding: 10px;
+    border-bottom: 1px solid grey;
+}
+
+/**/
+/**/
+/* FLOW */
+/**/
+/**/
 
 /* Node */
 /* Yellow style overridden here in plain css */
