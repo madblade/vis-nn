@@ -3,7 +3,7 @@ import * as tf             from '@tensorflow/tfjs';
 import Rete                from 'rete';
 import Node                from '../../vue/Node';
 import { NUM_SOCKET }      from '../../viewFlow';
-import { DropDownControl } from '../DropDownControl';
+// import { DropDownControl } from '../DropDownControl';
 
 class ConcatenateComponent extends Rete.Component
 {
@@ -41,9 +41,31 @@ class ConcatenateComponent extends Rete.Component
         if (!parents1 || parents1.length < 1) return;
         if (!parents2 || parents2.length < 1) return;
         const parent1 = parents1[0];
-        const parent2 = parents1[0];
+        const parent2 = parents2[0];
         if (!parent1.dataset) return;
         if (!parent2.dataset) return;
+
+        this.dataset = parent1.dataset;
+        const pythonLines1 = parent1.pythonLines;
+        const pythonLines2 = parent2.pythonLines;
+        const parent1Id = pythonLines1[pythonLines1.length - 1][0];
+        const parent2Id = pythonLines2[pythonLines2.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}([l${parent1Id},l${parent2Id}])`;
+        this.pythonLines = [];
+        const visited = new Set();
+        for (let l = 0; l < pythonLines1.length; ++l)
+        {
+            const currentLine = pythonLines1[l];
+            visited.add(currentLine[0]);
+            this.pythonLines.push(currentLine);
+        }
+        for (let l = 0; l < pythonLines2.length; ++l)
+        {
+            const currentLine = pythonLines2[l];
+            if (visited.has(currentLine[0])) continue;
+            this.pythonLines.push(currentLine);
+        }
+        this.pythonLines.push([node.id, pythonLine]);
 
         outputs.child = this;
     }
@@ -85,16 +107,14 @@ class AddComponent extends Rete.Component
         let input1 = new Rete.Input('parent1', 'in', NUM_SOCKET);
         let input2 = new Rete.Input('parent2', 'in', NUM_SOCKET);
         let out = new Rete.Output('child', 'out', NUM_SOCKET);
-
-        let aControl = new DropDownControl(this.editor, 'a', 'Activation',
-            ['linear', 'relu', 'tanh', 'sigmoid']
-        );
-
-        this.aControl = aControl;
+        // let aControl = new DropDownControl(this.editor, 'a', 'Activation',
+        //     ['linear', 'relu', 'tanh', 'sigmoid']
+        // );
 
         node.addInput(input1);
         node.addInput(input2);
-        node.addControl(aControl);
+        // node.addControl(aControl);
+        // this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgb(148,132,55)';
@@ -108,9 +128,31 @@ class AddComponent extends Rete.Component
         if (!parents1 || parents1.length < 1) return;
         if (!parents2 || parents2.length < 1) return;
         const parent1 = parents1[0];
-        const parent2 = parents1[0];
+        const parent2 = parents2[0];
         if (!parent1.dataset) return;
         if (!parent2.dataset) return;
+
+        this.dataset = parent1.dataset;
+        const pythonLines1 = parent1.pythonLines;
+        const pythonLines2 = parent2.pythonLines;
+        const parent1Id = pythonLines1[pythonLines1.length - 1][0];
+        const parent2Id = pythonLines2[pythonLines2.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}([l${parent1Id},l${parent2Id}])`;
+        this.pythonLines = [];
+        const visited = new Set();
+        for (let l = 0; l < pythonLines1.length; ++l)
+        {
+            const currentLine = pythonLines1[l];
+            visited.add(currentLine[0]);
+            this.pythonLines.push(currentLine);
+        }
+        for (let l = 0; l < pythonLines2.length; ++l)
+        {
+            const currentLine = pythonLines2[l];
+            if (visited.has(currentLine[0])) continue;
+            this.pythonLines.push(currentLine);
+        }
+        this.pythonLines.push([node.id, pythonLine]);
 
         outputs.child = this;
     }

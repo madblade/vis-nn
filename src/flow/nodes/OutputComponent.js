@@ -13,6 +13,7 @@ function generatePythonCode(parameters, dataset, pythonLines)
     {
         modelCode += `${pythonLines[i][1]}\n`;
     }
+    modelCode += `model = Model(l${pythonLines[0][0]}, l${pythonLines[pythonLines.length - 1][0]})\n`;
 
     return `import tensorflow as tf
 from tf.keras.datasets import ${dataset.NAME}
@@ -132,11 +133,11 @@ class OutputComponent extends Rete.Component
             return;
         }
         const parent = parents[0];
-        const dataset = parent.dataset;
-        if (!dataset) {
+        if (!parent || !parent.dataset) {
             this.eraseEditorCode();
             return;
         }
+        const dataset = parent.dataset;
 
         let learningRate = this.lrControl.getValue();
         if (learningRate > 1 || learningRate <= 0) {

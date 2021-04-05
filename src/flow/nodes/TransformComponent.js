@@ -38,6 +38,15 @@ class FlattenComponent extends Rete.Component
         const parent = parents[0];
         if (!parent.dataset) return;
 
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
+
         outputs.child = this;
     }
 
@@ -78,6 +87,7 @@ class DropoutComponent extends Rete.Component
 
         node.addInput(input);
         node.addControl(rControl);
+        this.rControl = rControl;
         node.addOutput(out);
 
         const color = 'rgb(97, 18, 140, 0.8)';
@@ -91,6 +101,15 @@ class DropoutComponent extends Rete.Component
         const parent = parents[0];
         if (!parent.dataset) return;
 
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
+
         outputs.child = this;
     }
 
@@ -103,8 +122,12 @@ class DropoutComponent extends Rete.Component
 
     generatePythonLine()
     {
-        const parameters = this.parameters;
-        return `Dropout(rate=${parameters.rate})`;
+        let rate = this.rControl.getValue();
+        if (rate <= 0 || rate >= 1) {
+            console.warn('Invalid rate.');
+            rate = 0.5;
+        }
+        return `Dropout(rate=${rate})`;
     }
 }
 
@@ -129,14 +152,16 @@ class BatchNormalizationComponent extends Rete.Component
         let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let mControl = new NumberControl(this.editor, 'r', 'Momentum', 'number', false, 0.99);
-        let aControl = new DropDownControl(this.editor, 'a', 'Activation',
-            ['linear', 'relu']
-        );
-        this.aControl = aControl;
+        // let aControl = new DropDownControl(this.editor, 'a', 'Activation',
+        //     ['linear', 'relu']
+        // );
+        // this.aControl = aControl;
 
         node.addInput(input);
         node.addControl(mControl);
-        node.addControl(aControl);
+        this.mControl = mControl;
+        // node.addControl(aControl);
+        // this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgb(97, 18, 140, 0.8)';
@@ -149,6 +174,15 @@ class BatchNormalizationComponent extends Rete.Component
         if (!parents || parents.length < 1) return;
         const parent = parents[0];
         if (!parent.dataset) return;
+
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
 
         outputs.child = this;
     }
@@ -168,8 +202,12 @@ class BatchNormalizationComponent extends Rete.Component
 
     generatePythonLine()
     {
-        const parameters = this.parameters;
-        return `BatchNormalization(momentum=${parameters.momentum})`;
+        let momentum = this.mControl.getValue();
+        if (momentum <= 0 || momentum >= 1) {
+            console.warn('Invalid momentum.');
+            momentum = 0.99;
+        }
+        return `BatchNormalization(momentum=${momentum})`;
     }
 }
 
