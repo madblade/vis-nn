@@ -311,6 +311,10 @@ function initFlow()
             return false;
         }
     });
+
+    editor.on('process', () => {
+        setTimeout(() => compile(), 100);
+    });
 }
 
 export { initFlow, NUM_SOCKET };

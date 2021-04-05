@@ -6,10 +6,15 @@ import Node                from '../../vue/Node';
 import { NumberControl }   from '../NumberControl';
 import { DropDownControl } from '../DropDownControl';
 
-function generatePythonCode(parameters, dataset, modelCode)
+function generatePythonCode(parameters, dataset, pythonLines)
 {
-    return `
-import tensorflow as tf
+    let modelCode = '\n';
+    for (let i = 0; i < pythonLines.length; i++)
+    {
+        modelCode += `${pythonLines[i][1]}\n`;
+    }
+
+    return `import tensorflow as tf
 from tf.keras.datasets import ${dataset.NAME}
 from tf.keras.models import Model
 from tf.keras.layers import Dense, Dropout, Flatten, Input, Concatenate, BatchNormalization, Add
@@ -54,7 +59,8 @@ model.fit(x_train, y_train,
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-    `;
+
+`;
 }
 
 class OutputComponent extends Rete.Component
@@ -116,12 +122,12 @@ class OutputComponent extends Rete.Component
         codeElement.innerHTML = '';
     }
 
+    // eslint-disable-next-line no-unused-vars
     worker(node, inputs, outputs)
     {
-        // inputs.num = node.data.num;
-        console.log('last call');
+        console.log('Processing…');
         const parents = inputs.parent;
-        if (!parents || !parents.length) {
+        if (!parents || parents.length < 1) {
             this.eraseEditorCode();
             return;
         }
@@ -175,6 +181,11 @@ class OutputComponent extends Rete.Component
         }
         let lastLayerActivation = this.aControl.getValue();
 
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(lastLayerUnits, lastLayerActivation)}(l${parentId})`;
+        pythonLines.push([node.id, pythonLine]);
+
         const modelParams = {
             learningRate,
             epochs,
@@ -183,11 +194,10 @@ class OutputComponent extends Rete.Component
             loss
         };
 
-        const code = generatePythonCode(modelParams, dataset);
-        console.log(code);
+        const code = generatePythonCode(modelParams, dataset, pythonLines);
 
         const codeElement = document.getElementById('code-container');
-        codeElement.innerHTML = '<pre><code>import tf from tensorflow</code></pre>';
+        codeElement.innerHTML = `<pre><code id="tfcode">${code}</code></pre>`;
         window.hljs.highlightAll();
     }
 
@@ -198,12 +208,10 @@ class OutputComponent extends Rete.Component
         this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
-    generatePythonLine()
+    generatePythonLine(units, activation)
     {
-        const parameters = this.parameters;
-        const activation = this.activation;
-        const activationText = `, activation='${activation}'`;
-        return `Dense(${parameters.size}${activationText})`;
+        const activationText = activation === 'linear' ? '' : `, activation='${activation}'`;
+        return `Dense(${units}${activationText})`;
     }
 }
 

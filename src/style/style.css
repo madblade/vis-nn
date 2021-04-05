@@ -44,12 +44,25 @@ body {
 }
 
 #panel-code {
+    right: 0;
+    position: fixed;
+    height: 100vh;
+    overflow: scroll;
     border-left: 1px solid grey;
 }
 
 #panel-code-title {
     padding: 10px;
     border-bottom: 1px solid grey;
+}
+
+#tfcode {
+    /*position: fixed;*/
+    /*height: 100vh;*/
+    /*overflow: scroll;*/
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+    margin-bottom: 20px;
 }
 
 .nav-tabs { border-color: grey; }

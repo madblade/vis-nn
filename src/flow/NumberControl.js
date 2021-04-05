@@ -24,7 +24,7 @@ class NumberControl extends Rete.Control
     {
         const ctx = this.vueContext || this.props;
         ctx.value = value;
-        console.log(value);
+        // console.log(value);
     }
 
     getValue()
@@ -34,7 +34,7 @@ class NumberControl extends Rete.Control
     }
 
     onChange() {
-        console.log('change');
+        // console.log('change');
     }
 }
 

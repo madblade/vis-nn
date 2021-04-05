@@ -65,6 +65,11 @@ class InputComponent extends Rete.Component
             NUM_CLASSES: 10,
             NAME: datasetName
         };
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}`;
+        this.pythonLines = [ // topologically sorted (internally by rete’s engine)
+            [node.id, pythonLine]
+        ];
+        console.log(this.pythonLines);
 
         outputs.child = this;
     }

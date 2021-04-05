@@ -95,9 +95,13 @@ class Conv2DLayerComponent extends Rete.Component
 
         node.addInput(input);
         node.addControl(fControl);
+        this.fControl = fControl;
         node.addControl(kControl);
+        this.kControl = kControl;
         node.addControl(sControl);
+        this.sControl = sControl;
         node.addControl(aControl);
+        this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgba(140, 80, 18, 0.8)';
@@ -107,19 +111,22 @@ class Conv2DLayerComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         outputs.conv2d = node.data.conv2d;
-        console.log('conv2d');
-        console.log(node);
-        console.log(inputs);
         const parents = inputs.parent;
-        if (parents && parents.length > 0)
-        {
-            const dataset = parents[0].dataset;
-            if (dataset) this.dataset = dataset;
-        }
-        console.log(outputs);
+        if (!parents || parents.length < 1) return;
+        const parent = parents[0];
+        if (!parent.dataset) return;
+
+        // here the node is connected to the input
+        this.dataset = parent.dataset;
+        const pythonLines = parent.pythonLines;
+        const parentId = pythonLines[pythonLines.length - 1][0];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
+        this.pythonLines = [];
+        for (let l = 0; l < pythonLines.length; ++l)
+            this.pythonLines.push(pythonLines[l]);
+        this.pythonLines.push([node.id, pythonLine]);
+
         outputs.child = this;
-        console.log('/conv2d');
-        // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -133,12 +140,28 @@ class Conv2DLayerComponent extends Rete.Component
 
     generatePythonLine()
     {
-        // TODO generate parameters
-        const parameters = this.parameters;
-        const activation = this.activation;
+        let filters = this.fControl.getValue();
+        if (filters < 1) {
+            console.warn('Invalid filters number.');
+            filters = 1;
+        }
+        let strides = this.sControl.getValue();
+        if (typeof strides !== 'string' || strides.split(',').length !== 2)
+        {
+            console.warn('Invalid strides.');
+            strides = '1,1';
+        }
+        let kernelSize = this.kControl.getValue();
+        if (typeof kernelSize !== 'string' || kernelSize.split(',').length !== 2)
+        {
+            console.warn('Invalid kernel.');
+            kernelSize = '3,3';
+        }
+        let activation = this.aControl.getValue();
+        // don’t need to filter that
+
         const activationText = activation === 'linear' ? '' : `, activation='${activation}'`;
-        return `Conv2D(${parameters.filters}, (${parameters.kernelSize}),
-            strides=(${parameters.strides})${activationText}, padding='same')`;
+        return `Conv2D(${filters}, (${kernelSize}), strides=(${strides})${activationText}, padding='same')`;
     }
 }
 
