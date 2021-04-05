@@ -36,7 +36,6 @@ class InputComponent extends Rete.Component
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
-        // console.log(node.data);
         if (node.data.a) dControl.onChange(node.data.a);
         else dControl.onChange('mnist');
     }

@@ -136,7 +136,6 @@ class Conv2DLayerComponent extends Rete.Component
         for (let l = 0; l < pythonLines.length; ++l)
             node.data.pythonLines.push(pythonLines[l]);
         node.data.pythonLines.push([node.id, pythonLine]);
-        console.log(node.id);
 
         outputs.child = node.data;
     }

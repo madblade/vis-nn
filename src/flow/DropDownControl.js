@@ -29,7 +29,6 @@ class DropDownControl extends Rete.Control
     {
         const ctx = this.vueContext || this.props;
         ctx.value = value;
-        // console.log(value);
     }
 
     getValue()
@@ -40,7 +39,7 @@ class DropDownControl extends Rete.Control
 
     onChange(e)
     {
-        console.log('Selected', e);
+        // console.log('Selected', e);
         this.props.value = e;
         this.putData(this.props.ikey, e);
     }
