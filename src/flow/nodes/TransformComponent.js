@@ -8,19 +8,21 @@ import { DropDownControl } from '../DropDownControl';
 
 class FlattenComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Flatten');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         node.addInput(input);
         node.addOutput(out);
@@ -31,6 +33,7 @@ class FlattenComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        outputs.child = this;
         // outputs.conv2d = node.data.conv2d;
         // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
@@ -50,20 +53,23 @@ class FlattenComponent extends Rete.Component
 
 class DropoutComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Dropout');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parent = null;
         this.tfjsConstructor = tf.layers.dropout;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let rControl = new NumberControl(this.editor, 'r', 'Rate', 'number', false, 0.5);
 
@@ -77,6 +83,7 @@ class DropoutComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        outputs.child = this;
         // outputs.conv2d = node.data.conv2d;
         // console.log(`add processing with activation ${this.aControl.getValue()}`);
     }
@@ -97,20 +104,23 @@ class DropoutComponent extends Rete.Component
 
 class BatchNormalizationComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Batch Norm.');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parent = null;
         this.tfjsConstructor = tf.layers.batchNormalization;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let mControl = new NumberControl(this.editor, 'r', 'Momentum', 'number', false, 0.99);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
@@ -129,8 +139,8 @@ class BatchNormalizationComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        // outputs.conv2d = node.data.conv2d;
-        console.log(`normalize processing with activation ${this.aControl.getValue()}`);
+        outputs.child = this;
+        // console.log(`normalize processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()

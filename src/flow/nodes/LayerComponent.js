@@ -8,21 +8,23 @@ import { DropDownControl } from '../DropDownControl';
 
 class DenseLayerComponent extends Rete.Component
 {
-    constructor(editor)
+    constructor(editor, pythonArchitecture)
     {
         super('Dense');
-        this.editor = editor;
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parent = null;
         this.tfjsConstructor = tf.layers.dense;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('din', 'in', NUM_SOCKET);
-        let out = new Rete.Output('dense', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let control = new NumberControl(this.editor, 'size', 'Units', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
@@ -42,9 +44,8 @@ class DenseLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        outputs.size = node.data.size;
-
-        console.log(`dense processing with units ${this.unitsControl.getValue()}`);
+        outputs.child = this;
+        // console.log(`dense processing with units ${this.unitsControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -65,20 +66,23 @@ class DenseLayerComponent extends Rete.Component
 
 class Conv2DLayerComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Conv2D');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parent = null;
         this.tfjsConstructor = tf.layers.conv2d;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let fControl = new NumberControl(this.editor, 'filters', 'Filters', 'number', false, 1);
         let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
@@ -103,7 +107,12 @@ class Conv2DLayerComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         outputs.conv2d = node.data.conv2d;
-        console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
+        console.log('conv2d');
+        console.log(node);
+        console.log(inputs);
+        console.log(outputs);
+        console.log('/conv2d');
+        // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()
@@ -128,22 +137,25 @@ class Conv2DLayerComponent extends Rete.Component
 
 class Pooling2DLayerComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Pooling2D');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parent = null;
         // TODO distinction
         this.tfjsConstructor = tf.layers.maxPooling2d;
         this.tfjsConstructor = tf.layers.averagePooling2d;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input = new Rete.Input('cin', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input = new Rete.Input('parent', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let pControl = new NumberControl(this.editor, 'px', 'Pool size', 'text', false, '3,3');
         let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
@@ -165,8 +177,9 @@ class Pooling2DLayerComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        outputs.child = this;
         // outputs.conv2d = node.data.conv2d;
-        console.log(`pooling2d processing with activation ${this.tControl.getValue()}`);
+        // console.log(`pooling2d processing with activation ${this.tControl.getValue()}`);
     }
 
     generateTFJSLayer()

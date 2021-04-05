@@ -7,21 +7,24 @@ import { DropDownControl } from '../DropDownControl';
 
 class ConcatenateComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Concatenate');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parents = [];
         this.tfjsContstructor = tf.layers.concatenate;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input1 = new Rete.Input('cin1', 'in', NUM_SOCKET);
-        let input2 = new Rete.Input('cin2', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input1 = new Rete.Input('parent1', 'in', NUM_SOCKET);
+        let input2 = new Rete.Input('parent2', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         node.addInput(input1);
         node.addInput(input2);
@@ -33,6 +36,7 @@ class ConcatenateComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        outputs.child = this;
         // outputs.conv2d = node.data.conv2d;
         // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }
@@ -56,21 +60,24 @@ class ConcatenateComponent extends Rete.Component
 
 class AddComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Add');
         this.data = {
             render: 'vue',
             component: Node
         };
+        this.parents = [];
         this.tfjsConstructor = tf.layers.add;
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let input1 = new Rete.Input('cin1', 'in', NUM_SOCKET);
-        let input2 = new Rete.Input('cin2', 'in', NUM_SOCKET);
-        let out = new Rete.Output('conv', 'out', NUM_SOCKET);
+        let input1 = new Rete.Input('parent1', 'in', NUM_SOCKET);
+        let input2 = new Rete.Input('parent2', 'in', NUM_SOCKET);
+        let out = new Rete.Output('child', 'out', NUM_SOCKET);
 
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['linear', 'relu', 'tanh', 'sigmoid']
@@ -90,7 +97,8 @@ class AddComponent extends Rete.Component
     worker(node, inputs, outputs)
     {
         // outputs.conv2d = node.data.conv2d;
-        console.log(`add processing with activation ${this.aControl.getValue()}`);
+        outputs.child = this;
+        // console.log(`add processing with activation ${this.aControl.getValue()}`);
     }
 
     generateTFJSLayer()

@@ -50,6 +50,12 @@ const mouseState = {
     clientY: 0,
 };
 
+const pythonArchitecture = {
+    dataset: {},
+    model: {},
+    modelMap: {}
+};
+
 function initEditor(editor)
 {
     editor.use(VueRenderPlugin);
@@ -181,7 +187,7 @@ function fixZoomOnChromeTouchpad(area)
 
 function initFlow()
 {
-    NUM_SOCKET = new Rete.Socket('Number');
+    NUM_SOCKET = new Rete.Socket('Flow');
     // ACTION_SOCKET = new Rete.Socket('Action');
     // DATA_SOCKET = new Rete.Socket('Data');
 
@@ -196,16 +202,16 @@ function initFlow()
     // editor.use(ModulePlugin.default, { engine, modules });
 
     // comp
-    const inputComponent = new InputComponent();
-    const denseComponent = new DenseLayerComponent(editor);
-    const conv2dComponent = new Conv2DLayerComponent(editor);
-    const pooling2dComponent = new Pooling2DLayerComponent(editor);
-    const concatenateComponent = new ConcatenateComponent(editor);
-    const flattenComponent = new FlattenComponent(editor);
-    const addComponent = new AddComponent(editor);
-    const batchNormComponent = new BatchNormalizationComponent(editor);
-    const dropoutComponent = new DropoutComponent(editor);
-    const outputComponent = new OutputComponent();
+    const inputComponent = new InputComponent(editor, pythonArchitecture);
+    const denseComponent = new DenseLayerComponent(editor, pythonArchitecture);
+    const conv2dComponent = new Conv2DLayerComponent(editor, pythonArchitecture);
+    const pooling2dComponent = new Pooling2DLayerComponent(editor, pythonArchitecture);
+    const concatenateComponent = new ConcatenateComponent(editor, pythonArchitecture);
+    const flattenComponent = new FlattenComponent(editor, pythonArchitecture);
+    const addComponent = new AddComponent(editor, pythonArchitecture);
+    const batchNormComponent = new BatchNormalizationComponent(editor, pythonArchitecture);
+    const dropoutComponent = new DropoutComponent(editor, pythonArchitecture);
+    const outputComponent = new OutputComponent(editor, pythonArchitecture);
     const components = [
         inputComponent,
 
@@ -254,7 +260,7 @@ function initFlow()
         {
             if (editor.silent) return;
             eventHandlers.clear();
-            compile();
+            setTimeout(() => compile(), 100);
         }
     );
 
@@ -299,8 +305,9 @@ function initFlow()
     editor.on('nodecreate', node => {
         const names = ['Input', 'Output'];
 
-        if (names.includes(node.name) && editor.nodes.find(n => names.includes(n.name))) {
-            console.log(`${node.name} already present`);
+        const name = node.name;
+        if (names.includes(name) && editor.nodes.find(n => name === n.name && names.includes(name))) {
+            console.log(`${name} already present`);
             return false;
         }
     });

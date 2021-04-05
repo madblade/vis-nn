@@ -7,7 +7,7 @@ import { DropDownControl } from '../DropDownControl';
 
 class InputComponent extends Rete.Component
 {
-    constructor()
+    constructor(editor, pythonArchitecture)
     {
         super('Input');
         this.data = {
@@ -20,11 +20,13 @@ class InputComponent extends Rete.Component
             IMAGE_WIDTH: 0,
             IMAGE_CHANNELS: 1,
         };
+        this.editor = editor;
+        this.pythonArchitecture = pythonArchitecture;
     }
 
     builder(node)
     {
-        let out = new Rete.Output('in', '', NUM_SOCKET);
+        let out = new Rete.Output('child', '', NUM_SOCKET);
         let dControl = new DropDownControl(this.editor, 'a', 'Dataset',
             ['mnist', 'cifar10', 'cifar100', 'imdb', 'reuters', 'fashion_mnist', 'boston_housing']
         );
@@ -38,7 +40,7 @@ class InputComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
-        outputs.num = node.data.num;
+        outputs.child = this;
     }
 
     generateTFJSLayer()
