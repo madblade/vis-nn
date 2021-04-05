@@ -39,7 +39,7 @@ body {
 
 /* Nav & tabs */
 #architecture-header {
-    border: 1px solid grey;
+    border-bottom: 1px solid grey;
     padding: 5px 30px;
 }
 
@@ -50,6 +50,18 @@ body {
 #panel-code-title {
     padding: 10px;
     border-bottom: 1px solid grey;
+}
+
+.nav-tabs { border-color: grey; }
+
+.nav-tabs .nav-link.active {
+    background-color: rgb(91, 91, 91);
+    border-color: grey;
+    color: white;
+}
+
+a.nav-link {
+    color: grey;
 }
 
 /**/
