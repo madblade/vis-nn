@@ -15,7 +15,7 @@ class InputComponent extends Rete.Component
             component: Node
         };
         this.tfjsConstructor = tf.input;
-        this.dataset = { // TODO populate input
+        this.dataset = {
             IMAGE_HEIGHT: 0,
             IMAGE_WIDTH: 0,
             IMAGE_CHANNELS: 1,
@@ -28,9 +28,10 @@ class InputComponent extends Rete.Component
     {
         let out = new Rete.Output('child', '', NUM_SOCKET);
         let dControl = new DropDownControl(this.editor, 'a', 'Dataset',
-            ['mnist', 'cifar10', 'cifar100', 'imdb', 'reuters', 'fashion_mnist', 'boston_housing']
+            ['mnist', 'fashion_mnist', 'cifar10', 'cifar100'] //, 'imdb', 'reuters', 'boston_housing']
         );
 
+        this.dControl = dControl;
         node.addOutput(out);
         node.addControl(dControl);
 
@@ -40,6 +41,31 @@ class InputComponent extends Rete.Component
 
     worker(node, inputs, outputs)
     {
+        let datasetName = this.dControl.getValue();
+        switch (datasetName)
+        {
+            case 'mnist':
+            case 'fashion_mnist':
+            case 'cifar10':
+            case 'cifar100':
+            // case 'imdb':
+            // case 'reuters':
+            // case 'boston_housing':
+                break;
+            default:
+                console.warn('Invalid dataset.');
+                datasetName = 'mnist';
+                break;
+        }
+        const isMNIST = datasetName === 'mnist' || datasetName === 'fashion_mnist';
+        this.dataset = {
+            IMAGE_HEIGHT: isMNIST ? 28 : 32,
+            IMAGE_WIDTH: isMNIST ? 28 : 32,
+            IMAGE_CHANNELS: isMNIST ? 1 : 3,
+            NUM_CLASSES: 10,
+            NAME: datasetName
+        };
+
         outputs.child = this;
     }
 

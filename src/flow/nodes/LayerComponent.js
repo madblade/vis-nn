@@ -28,7 +28,7 @@ class DenseLayerComponent extends Rete.Component
 
         let control = new NumberControl(this.editor, 'size', 'Units', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
-            ['linear', 'relu', 'tanh', 'sigmoid']
+            ['relu', 'tanh', 'sigmoid', 'linear']
         );
 
         this.unitsControl = control;
@@ -88,7 +88,7 @@ class Conv2DLayerComponent extends Rete.Component
         let kControl = new NumberControl(this.editor, 'kx', 'Kernel', 'text', false, '3,3');
         let sControl = new NumberControl(this.editor, 'sx', 'Stride', 'text', false, '1,1');
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
-            ['linear', 'relu', 'tanh', 'sigmoid']
+            ['relu', 'tanh', 'sigmoid', 'linear']
         );
 
         this.aControl = aControl;
@@ -110,7 +110,14 @@ class Conv2DLayerComponent extends Rete.Component
         console.log('conv2d');
         console.log(node);
         console.log(inputs);
+        const parents = inputs.parent;
+        if (parents && parents.length > 0)
+        {
+            const dataset = parents[0].dataset;
+            if (dataset) this.dataset = dataset;
+        }
         console.log(outputs);
+        outputs.child = this;
         console.log('/conv2d');
         // console.log(`conv2d processing with activation ${this.aControl.getValue()}`);
     }

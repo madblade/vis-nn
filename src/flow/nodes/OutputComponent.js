@@ -6,22 +6,22 @@ import Node                from '../../vue/Node';
 import { NumberControl }   from '../NumberControl';
 import { DropDownControl } from '../DropDownControl';
 
-function generatePythonCode(dataset, model, modelCode)
+function generatePythonCode(parameters, dataset, modelCode)
 {
-    const code = `
+    return `
 import tensorflow as tf
-from tf.keras.datasets import ${dataset.pythonName}
+from tf.keras.datasets import ${dataset.NAME}
 from tf.keras.models import Model
 from tf.keras.layers import Dense, Dropout, Flatten, Input, Concatenate, BatchNormalization, Add
 from tf.keras.layers import Conv2D, MaxPooling2D, ReLU
 from tf.keras import backend as K
-batch_size = ${model.params.batchSize}
+batch_size = ${parameters.batchSize}
 num_classes = ${dataset.NUM_CLASSES}
-epochs = ${model.params.epochs}
+epochs = ${parameters.epochs}
 # input image dimensions
 img_rows, img_cols, channels = ${dataset.IMAGE_HEIGHT}, ${dataset.IMAGE_WIDTH}, ${dataset.IMAGE_CHANNELS}
 # the data, split between train and test sets
-(x_train, y_train), (x_test, y_test) = ${dataset.pythonName}.load_data()
+(x_train, y_train), (x_test, y_test) = ${dataset.NAME}.load_data()
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], channels, img_rows, img_cols)
     x_test = x_test.reshape(x_test.shape[0], channels, img_rows, img_cols)
@@ -40,11 +40,11 @@ print(x_test.shape[0], 'test samples')
 # convert class vectors to binary class matrices
 y_train = tf.keras.utils.to_categorical(y_train, num_classes)
 y_test = tf.keras.utils.to_categorical(y_test, num_classes)
-############################# Architecture made by Ennui
+############################# Architecture (credit: Ennui)
 ${modelCode}
 #############################
-model.compile(loss=tf.keras.losses.${model.params.getPythonLoss()},
-              optimizer=tf.keras.optimizers.${model.params.getPythonOptimizer()}(lr=${model.params.learningRate}),
+model.compile(loss=tf.keras.losses.${parameters.loss},
+              optimizer=tf.keras.optimizers.${parameters.optimizer}(lr=${parameters.learningRate}),
               metrics=['accuracy'])
 model.fit(x_train, y_train,
           batch_size=batch_size,
@@ -55,7 +55,6 @@ score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
     `;
-    return code;
 }
 
 class OutputComponent extends Rete.Component
@@ -76,31 +75,116 @@ class OutputComponent extends Rete.Component
     builder(node)
     {
         let input = new Rete.Input('parent', '', NUM_SOCKET);
-        let control = new NumberControl(this.editor, 'size', 'Dimension', 'number', false, 10);
+        let dControl = new NumberControl(this.editor, 'size', 'Dimension', 'number', false, 10);
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['softmax', 'sigmoid', 'linear', 'relu', 'tanh']
         );
         let oControl = new DropDownControl(this.editor, 'o', 'Optimizer',
-            ['sgd', 'rmsprop', 'adagrad', 'adam']
+            ['SGD', 'RMSprop', 'Adagrad', 'Adam']
         );
         let lControl = new DropDownControl(this.editor, 'l', 'Loss',
             ['X-Entropy', 'Hinge', 'MSE', 'MAE']
         );
+        let lrControl = new NumberControl(this.editor, 'lr', 'Learning Rate', 'number', false, 0.01);
+        let eControl = new NumberControl(this.editor, 'e', 'Epochs', 'number', false, 6);
+        let bsControl = new NumberControl(this.editor, 'bs', 'Batch Size', 'number', false, 64);
 
         node.addInput(input);
-        node.addControl(control);
+        node.addControl(dControl);
+        this.dControl = dControl;
         node.addControl(aControl);
+        this.aControl = aControl;
         node.addControl(oControl);
+        this.oControl = oControl;
         node.addControl(lControl);
+        this.lControl = lControl;
+
+        node.addControl(lrControl);
+        this.lrControl = lrControl;
+        node.addControl(eControl);
+        this.eControl = eControl;
+        node.addControl(bsControl);
+        this.bsControl = bsControl;
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
+    }
+
+    eraseEditorCode()
+    {
+        const codeElement = document.getElementById('code-container');
+        codeElement.innerHTML = '';
     }
 
     worker(node, inputs, outputs)
     {
         // inputs.num = node.data.num;
         console.log('last call');
+        const parents = inputs.parent;
+        if (!parents || !parents.length) {
+            this.eraseEditorCode();
+            return;
+        }
+        const parent = parents[0];
+        const dataset = parent.dataset;
+        if (!dataset) {
+            this.eraseEditorCode();
+            return;
+        }
+
+        let learningRate = this.lrControl.getValue();
+        if (learningRate > 1 || learningRate <= 0) {
+            console.warn('Invalid learning rate.');
+            learningRate = 0.01;
+        }
+        let epochs = this.eControl.getValue();
+        if (epochs < 1) {
+            console.warn('Invalid epoch number.');
+            epochs = 1;
+        }
+        let batchSize = this.bsControl.getValue();
+        if (batchSize < 1) {
+            console.warn('Invalid batch size.');
+            batchSize = 1;
+        }
+        let loss = this.lControl.getValue();
+        switch (loss)
+        {
+            case 'X-Entropy': loss = 'categorical_crossentropy'; break;
+            case 'Hinge': loss = 'hinge'; break;
+            case 'MSE': loss = 'mse'; break;
+            case 'MAE': loss = 'mae'; break;
+            default: loss = 'categorical_crossentropy'; break;
+        }
+        let optimizer = this.oControl.getValue();
+        switch (optimizer)
+        {
+            case 'SGD':
+            case 'RMSProp':
+            case 'Adam':
+            case 'Adagrad':
+                break;
+            default: optimizer = 'RMSprop'; break;
+        }
+
+        let lastLayerUnits = this.dControl.getValue();
+        if (lastLayerUnits < 1)
+        {
+            console.warn('Invalid output dimension.');
+            lastLayerUnits = 1;
+        }
+        let lastLayerActivation = this.aControl.getValue();
+
+        const modelParams = {
+            learningRate,
+            epochs,
+            batchSize,
+            optimizer,
+            loss
+        };
+
+        const code = generatePythonCode(modelParams, dataset);
+        console.log(code);
 
         const codeElement = document.getElementById('code-container');
         codeElement.innerHTML = '<pre><code>import tf from tensorflow</code></pre>';
