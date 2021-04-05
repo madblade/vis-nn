@@ -12,11 +12,11 @@ export default {
     name: "dropdown",
     data() {
         return {
-            sel: this.selected
+            sel: this.value
         };
     },
     components: {},
-    props: ["config", 'emitter', 'change', 'options', 'selected'],
+    props: ["config", 'emitter', 'change', 'options', 'value'],
     computed: {
     },
     directives: {

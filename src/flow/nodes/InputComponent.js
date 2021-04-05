@@ -31,17 +31,19 @@ class InputComponent extends Rete.Component
             ['mnist', 'fashion_mnist', 'cifar10', 'cifar100'] //, 'imdb', 'reuters', 'boston_housing']
         );
 
-        this.dControl = dControl;
-        node.addOutput(out);
         node.addControl(dControl);
+        node.addOutput(out);
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
+        // console.log(node.data);
+        if (node.data.a) dControl.onChange(node.data.a);
+        else dControl.onChange('mnist');
     }
 
     worker(node, inputs, outputs)
     {
-        let datasetName = this.dControl.getValue();
+        let datasetName = node.data.a;
         switch (datasetName)
         {
             case 'mnist':
@@ -53,30 +55,30 @@ class InputComponent extends Rete.Component
             // case 'boston_housing':
                 break;
             default:
-                console.warn('Invalid dataset.');
+                console.warn(`Invalid dataset: ${datasetName}.`);
                 datasetName = 'mnist';
                 break;
         }
         const isMNIST = datasetName === 'mnist' || datasetName === 'fashion_mnist';
-        this.dataset = {
+        node.data.dataset = {
             IMAGE_HEIGHT: isMNIST ? 28 : 32,
             IMAGE_WIDTH: isMNIST ? 28 : 32,
             IMAGE_CHANNELS: isMNIST ? 1 : 3,
             NUM_CLASSES: 10,
             NAME: datasetName
         };
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}`;
-        this.pythonLines = [ // topologically sorted (internally by rete’s engine)
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}`;
+        node.data.pythonLines = [ // topologically sorted (internally by rete’s engine)
             [node.id, pythonLine]
         ];
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
-    generateTFJSLayer()
+    generateTFJSLayer(node)
     {
-        const dataset = this.dataset;
-        this.tfjsLayer = this.tfjsConstructor({shape: [
+        const dataset = node.data.dataset;
+        this.tfjsLayer = node.data.tfjsConstructor({shape: [
             dataset.IMAGE_HEIGHT,
             dataset.IMAGE_WIDTH,
             dataset.IMAGE_CHANNELS

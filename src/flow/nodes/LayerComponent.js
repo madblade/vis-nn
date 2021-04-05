@@ -15,7 +15,6 @@ class DenseLayerComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         this.tfjsConstructor = tf.layers.dense;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -40,6 +39,7 @@ class DenseLayerComponent extends Rete.Component
 
         const color = 'rgba(140, 80, 18, 0.8)';
         node.data.style = `${color} !important`;
+        if (node.data.a) aControl.onChange(node.data.a);
     }
 
     worker(node, inputs, outputs)
@@ -49,29 +49,29 @@ class DenseLayerComponent extends Rete.Component
         const parent = parents[0];
         if (!parent || !parent.dataset) return;
 
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
-    generatePythonLine()
+    generatePythonLine(node)
     {
-        const activation = this.aControl.getValue();
-        let units = this.uControl.getValue();
+        const activation = node.data.a;
+        let units = node.data.size;
         if (units < 1)
         {
             console.warn('Invalid unit number.');
@@ -91,7 +91,6 @@ class Conv2DLayerComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         this.tfjsConstructor = tf.layers.conv2d;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -109,21 +108,16 @@ class Conv2DLayerComponent extends Rete.Component
             ['relu', 'tanh', 'sigmoid', 'linear']
         );
 
-        this.aControl = aControl;
-
         node.addInput(input);
         node.addControl(fControl);
-        this.fControl = fControl;
         node.addControl(kControl);
-        this.kControl = kControl;
         node.addControl(sControl);
-        this.sControl = sControl;
         node.addControl(aControl);
-        this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgba(140, 80, 18, 0.8)';
         node.data.style = `${color} !important`;
+        if (node.data.a) aControl.onChange(node.data.a);
     }
 
     worker(node, inputs, outputs)
@@ -134,49 +128,48 @@ class Conv2DLayerComponent extends Rete.Component
         if (!parent || !parent.dataset) return;
 
         // here the node is connected to the input
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
         console.log(node.id);
-        console.log(this);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
     {
         // TODO set from params
         // TODO set from parent
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
-    generatePythonLine()
+    generatePythonLine(node)
     {
-        let filters = this.fControl.getValue();
+        let filters = node.data.filters;
         if (filters < 1) {
             console.warn('Invalid filters number.');
             filters = 1;
         }
-        let strides = this.sControl.getValue();
+        let strides = node.data.sx;
         if (typeof strides !== 'string' || strides.split(',').length !== 2)
         {
             console.warn('Invalid strides.');
             strides = '1,1';
         }
-        let kernelSize = this.kControl.getValue();
+        let kernelSize = node.data.kx;
         if (typeof kernelSize !== 'string' || kernelSize.split(',').length !== 2)
         {
             console.warn('Invalid kernel.');
             kernelSize = '3,3';
         }
-        let activation = this.aControl.getValue();
+        let activation = node.data.a;
         // don’t need to filter that
 
         const activationText = activation === 'linear' ? '' : `, activation='${activation}'`;
@@ -193,7 +186,6 @@ class Pooling2DLayerComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         // TODO distinction in tfjs
         this.tfjsConstructor = tf.layers.maxPooling2d;
         this.tfjsConstructor = tf.layers.averagePooling2d;
@@ -214,15 +206,13 @@ class Pooling2DLayerComponent extends Rete.Component
 
         node.addInput(input);
         node.addControl(pControl);
-        this.pControl = pControl;
         node.addControl(sControl);
-        this.sControl = sControl;
         node.addControl(tControl);
-        this.tControl = tControl;
         node.addOutput(out);
 
         const color = 'rgba(140, 80, 18, 0.8)';
         node.data.style = `${color} !important`;
+        if (node.data.t) tControl.onChange(node.data.t);
     }
 
     worker(node, inputs, outputs)
@@ -232,40 +222,40 @@ class Pooling2DLayerComponent extends Rete.Component
         const parent = parents[0];
         if (!parent || !parent.dataset) return;
 
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
-    generatePythonLine()
+    generatePythonLine(node)
     {
-        let poolSize = this.pControl.getValue();
+        let poolSize = node.data.px;
         if (typeof poolSize !== 'string' || poolSize.split(',').length !== 2)
         {
             console.warn('Invalid pool size.');
             poolSize = '3,3';
         }
-        let stride = this.sControl.getValue();
+        let stride = node.data.sx;
         if (typeof stride !== 'string' || stride.split(',').length !== 2)
         {
             console.warn('Invalid pool size.');
             stride = '1,1';
         }
-        let prefix = this.tControl.getValue();
+        let prefix = node.data.t;
         prefix = prefix === 'max' ? 'Max' : prefix === 'average' ? 'Average' : 'Max';
 
         return `${prefix}Pooling2D(pool_size=(${poolSize}), strides=(${stride}))`;

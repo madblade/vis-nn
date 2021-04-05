@@ -14,7 +14,6 @@ class ConcatenateComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parents = [];
         this.tfjsContstructor = tf.layers.concatenate;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -45,29 +44,29 @@ class ConcatenateComponent extends Rete.Component
         if (!parent1 || !parent1.dataset) return;
         if (!parent2 || !parent2.dataset) return;
 
-        this.dataset = parent1.dataset;
+        node.data.dataset = parent1.dataset;
         const pythonLines1 = parent1.pythonLines;
         const pythonLines2 = parent2.pythonLines;
         const parent1Id = pythonLines1[pythonLines1.length - 1][0];
         const parent2Id = pythonLines2[pythonLines2.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}([l${parent1Id},l${parent2Id}])`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}([l${parent1Id},l${parent2Id}])`;
+        node.data.pythonLines = [];
         const visited = new Set();
         for (let l = 0; l < pythonLines1.length; ++l)
         {
             const currentLine = pythonLines1[l];
             visited.add(currentLine[0]);
-            this.pythonLines.push(currentLine);
+            node.data.pythonLines.push(currentLine);
         }
         for (let l = 0; l < pythonLines2.length; ++l)
         {
             const currentLine = pythonLines2[l];
             if (visited.has(currentLine[0])) continue;
-            this.pythonLines.push(currentLine);
+            node.data.pythonLines.push(currentLine);
         }
-        this.pythonLines.push([node.id, pythonLine]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
@@ -114,7 +113,6 @@ class AddComponent extends Rete.Component
         node.addInput(input1);
         node.addInput(input2);
         // node.addControl(aControl);
-        // this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgb(148,132,55)';
@@ -132,31 +130,29 @@ class AddComponent extends Rete.Component
         if (!parent1 || !parent1.dataset) return;
         if (!parent2 || !parent2.dataset) return;
 
-        this.dataset = parent1.dataset;
+        node.data.dataset = parent1.dataset;
         const pythonLines1 = parent1.pythonLines;
         const pythonLines2 = parent2.pythonLines;
-        console.log(pythonLines1);
-        console.log(pythonLines2);
         const parent1Id = pythonLines1[pythonLines1.length - 1][0];
         const parent2Id = pythonLines2[pythonLines2.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}([l${parent1Id},l${parent2Id}])`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}([l${parent1Id},l${parent2Id}])`;
+        node.data.pythonLines = [];
         const visited = new Set();
         for (let l = 0; l < pythonLines1.length; ++l)
         {
             const currentLine = pythonLines1[l];
             visited.add(currentLine[0]);
-            this.pythonLines.push(currentLine);
+            node.data.pythonLines.push(currentLine);
         }
         for (let l = 0; l < pythonLines2.length; ++l)
         {
             const currentLine = pythonLines2[l];
             if (visited.has(currentLine[0])) continue;
-            this.pythonLines.push(currentLine);
+            node.data.pythonLines.push(currentLine);
         }
-        this.pythonLines.push([node.id, pythonLine]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()

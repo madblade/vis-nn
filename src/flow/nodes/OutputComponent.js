@@ -73,7 +73,6 @@ class OutputComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         this.tfjsConstructor = tf.layers.dense;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -98,23 +97,19 @@ class OutputComponent extends Rete.Component
 
         node.addInput(input);
         node.addControl(dControl);
-        this.dControl = dControl;
         node.addControl(aControl);
-        this.aControl = aControl;
         node.addControl(oControl);
-        this.oControl = oControl;
         node.addControl(lControl);
-        this.lControl = lControl;
 
         node.addControl(lrControl);
-        this.lrControl = lrControl;
         node.addControl(eControl);
-        this.eControl = eControl;
         node.addControl(bsControl);
-        this.bsControl = bsControl;
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
+        if (node.data.a) aControl.onChange(node.data.a);
+        if (node.data.o) oControl.onChange(node.data.o);
+        if (node.data.l) lControl.onChange(node.data.l);
     }
 
     eraseEditorCode()
@@ -139,22 +134,22 @@ class OutputComponent extends Rete.Component
         }
         const dataset = parent.dataset;
 
-        let learningRate = this.lrControl.getValue();
+        let learningRate = node.data.lr;
         if (learningRate > 1 || learningRate <= 0) {
             console.warn('Invalid learning rate.');
             learningRate = 0.01;
         }
-        let epochs = this.eControl.getValue();
+        let epochs = node.data.e;
         if (epochs < 1) {
             console.warn('Invalid epoch number.');
             epochs = 1;
         }
-        let batchSize = this.bsControl.getValue();
+        let batchSize = node.data.bs;
         if (batchSize < 1) {
             console.warn('Invalid batch size.');
             batchSize = 1;
         }
-        let loss = this.lControl.getValue();
+        let loss = node.data.l;
         switch (loss)
         {
             case 'X-Entropy': loss = 'categorical_crossentropy'; break;
@@ -163,7 +158,7 @@ class OutputComponent extends Rete.Component
             case 'MAE': loss = 'mae'; break;
             default: loss = 'categorical_crossentropy'; break;
         }
-        let optimizer = this.oControl.getValue();
+        let optimizer = node.data.o;
         switch (optimizer)
         {
             case 'SGD':
@@ -174,13 +169,13 @@ class OutputComponent extends Rete.Component
             default: optimizer = 'RMSprop'; break;
         }
 
-        let lastLayerUnits = this.dControl.getValue();
+        let lastLayerUnits = node.data.size;
         if (lastLayerUnits < 1)
         {
             console.warn('Invalid output dimension.');
             lastLayerUnits = 1;
         }
-        let lastLayerActivation = this.aControl.getValue();
+        let lastLayerActivation = node.data.a;
 
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
@@ -204,9 +199,9 @@ class OutputComponent extends Rete.Component
 
     generateTFJSLayer()
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
     generatePythonLine(units, activation)

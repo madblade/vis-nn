@@ -38,23 +38,23 @@ class FlattenComponent extends Rete.Component
         const parent = parents[0];
         if (!parent || !parent.dataset) return;
 
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
     generatePythonLine()
@@ -72,7 +72,6 @@ class DropoutComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         this.tfjsConstructor = tf.layers.dropout;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -87,7 +86,6 @@ class DropoutComponent extends Rete.Component
 
         node.addInput(input);
         node.addControl(rControl);
-        this.rControl = rControl;
         node.addOutput(out);
 
         const color = 'rgb(97, 18, 140, 0.8)';
@@ -101,28 +99,28 @@ class DropoutComponent extends Rete.Component
         const parent = parents[0];
         if (!parent || !parent.dataset) return;
 
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
     generateTFJSLayer()
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        // const parameters = this.parameters;
+        // const parent = this.parent;
+        // this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
     }
 
-    generatePythonLine()
+    generatePythonLine(node)
     {
-        let rate = this.rControl.getValue();
+        let rate = node.data.r;
         if (rate <= 0 || rate >= 1) {
             console.warn('Invalid rate.');
             rate = 0.5;
@@ -140,7 +138,6 @@ class BatchNormalizationComponent extends Rete.Component
             render: 'vue',
             component: Node
         };
-        this.parent = null;
         this.tfjsConstructor = tf.layers.batchNormalization;
         this.editor = editor;
         this.pythonArchitecture = pythonArchitecture;
@@ -155,13 +152,10 @@ class BatchNormalizationComponent extends Rete.Component
         // let aControl = new DropDownControl(this.editor, 'a', 'Activation',
         //     ['linear', 'relu']
         // );
-        // this.aControl = aControl;
 
         node.addInput(input);
         node.addControl(mControl);
-        this.mControl = mControl;
         // node.addControl(aControl);
-        // this.aControl = aControl;
         node.addOutput(out);
 
         const color = 'rgb(97, 18, 140, 0.8)';
@@ -175,34 +169,34 @@ class BatchNormalizationComponent extends Rete.Component
         const parent = parents[0];
         if (!parent || !parent.dataset) return;
 
-        this.dataset = parent.dataset;
+        node.data.dataset = parent.dataset;
         const pythonLines = parent.pythonLines;
         const parentId = pythonLines[pythonLines.length - 1][0];
-        const pythonLine = `l${node.id} = ${this.generatePythonLine()}(l${parentId})`;
-        this.pythonLines = [];
+        const pythonLine = `l${node.id} = ${this.generatePythonLine(node)}(l${parentId})`;
+        node.data.pythonLines = [];
         for (let l = 0; l < pythonLines.length; ++l)
-            this.pythonLines.push(pythonLines[l]);
-        this.pythonLines.push([node.id, pythonLine]);
+            node.data.pythonLines.push(pythonLines[l]);
+        node.data.pythonLines.push([node.id, pythonLine]);
 
-        outputs.child = this;
+        outputs.child = node.data;
     }
 
-    generateTFJSLayer()
+    generateTFJSLayer(node)
     {
-        const parameters = this.parameters;
-        const parent = this.parent;
-        this.tfjsLayer = this.tfjsConstructor(parameters).apply(parent.tfjsLayer);
-        const activation = this.activation;
+        const parameters = node.data.parameters;
+        const parent = node.data.parent;
+        node.data.tfjsLayer = node.data.tfjsConstructor(parameters).apply(parent.tfjsLayer);
+        const activation = node.data.activation;
         if (activation !== 'linear')
         {
             // Only reLU supported for batch normalization
-            this.tfjsLayer = tf.layers.reLU().apply(this.tfjsLayer);
+            node.data.tfjsLayer = tf.layers.reLU().apply(node.data.tfjsLayer);
         }
     }
 
-    generatePythonLine()
+    generatePythonLine(node)
     {
-        let momentum = this.mControl.getValue();
+        let momentum = node.data.r;
         if (momentum <= 0 || momentum >= 1) {
             console.warn('Invalid momentum.');
             momentum = 0.99;

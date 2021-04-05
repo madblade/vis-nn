@@ -7,32 +7,42 @@ import      DropDown from '../vue/DropDown';
 
 class DropDownControl extends Rete.Control
 {
-    constructor(emitter, key, title, options) {
+    constructor(emitter, key, title, options, initial) {
         super(key);
 
         // this.component = DropDown;
         this.component = DropDown;
         this.title = title;
-        this.selected = options[0];
+        this.value = initial || options[0];
 
         this.props = {
             emitter,
+            ikey: key,
             change: e => this.onChange(e),
             options,
-            selected: this.selected
+            initial,
+            value: this.value
         };
+    }
+
+    setValue(value)
+    {
+        const ctx = this.vueContext || this.props;
+        ctx.value = value;
+        // console.log(value);
     }
 
     getValue()
     {
-        const ctx = this.props;
-        return ctx.selected;
+        const ctx = this.vueContext || this.props;
+        return ctx.value;
     }
 
     onChange(e)
     {
         console.log('Selected', e);
-        this.props.selected = e;
+        this.props.value = e;
+        this.putData(this.props.ikey, e);
     }
 }
 
