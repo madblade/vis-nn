@@ -294,6 +294,16 @@ function initFlow()
     });
 
     editor.use(AutoArrangePlugin, { margin: {x: 50, y: 50}, depth: 100 });
+
+    // singleton input and output
+    editor.on('nodecreate', node => {
+        const names = ['Input', 'Output'];
+
+        if (names.includes(node.name) && editor.nodes.find(n => names.includes(n.name))) {
+            console.log(`${node.name} already present`);
+            return false;
+        }
+    });
 }
 
 export { initFlow, NUM_SOCKET };

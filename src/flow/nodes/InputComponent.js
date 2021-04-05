@@ -1,8 +1,9 @@
 
-import * as tf        from '@tensorflow/tfjs';
-import Rete           from 'rete';
-import { NUM_SOCKET } from '../../viewFlow';
-import Node           from '../../vue/Node';
+import * as tf             from '@tensorflow/tfjs';
+import Rete                from 'rete';
+import { NUM_SOCKET }      from '../../viewFlow';
+import Node                from '../../vue/Node';
+import { DropDownControl } from '../DropDownControl';
 
 class InputComponent extends Rete.Component
 {
@@ -24,7 +25,12 @@ class InputComponent extends Rete.Component
     builder(node)
     {
         let out = new Rete.Output('in', '', NUM_SOCKET);
+        let dControl = new DropDownControl(this.editor, 'a', 'Dataset',
+            ['mnist', 'cifar10', 'cifar100', 'imdb', 'reuters', 'fashion_mnist', 'boston_housing']
+        );
+
         node.addOutput(out);
+        node.addControl(dControl);
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;

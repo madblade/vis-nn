@@ -25,10 +25,18 @@ class OutputComponent extends Rete.Component
         let aControl = new DropDownControl(this.editor, 'a', 'Activation',
             ['softmax', 'sigmoid', 'linear', 'relu', 'tanh']
         );
+        let oControl = new DropDownControl(this.editor, 'a', 'Optimizer',
+            ['sgd', 'rmsprop', 'adagrad', 'adam']
+        );
+        let lControl = new DropDownControl(this.editor, 'a', 'Loss',
+            ['X-Entropy', 'Hinge', 'MSE', 'MAE']
+        );
 
         node.addInput(input);
         node.addControl(control);
         node.addControl(aControl);
+        node.addControl(oControl);
+        node.addControl(lControl);
 
         const color = 'rgb(85,126,19,0.8)';
         node.data.style = `${color} !important`;
